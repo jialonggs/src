@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 完毕报告书质量检测列表(DOC_FINISHREPORT_QUILITY) -->
+<mapper namespace="mysql.docFinishreportQuility">
+    <!-- 结果映射 -->
+    <resultMap id="docFinishreportQuilityMap" type="DocFinishreportQuilityEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, FINISHREPORTDOC_ID, UPDATETIME, ISDELETE, ADDUSER, 
+        CREATETIME, TEXTURINGCODE, DEPTHSTANDARD, DEPTHREAL, GLOSSSTANDARD, 
+        GLOSSREAL, PICURL
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findDocFinishreportQuilityByCondition" resultMap="docFinishreportQuilityMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM DOC_FINISHREPORT_QUILITY WHERE 1 = 1
+        <if test="finishreportdocId != null and finishreportdocId != ''">
+            AND FINISHREPORTDOC_ID LIKE CONCAT('%',#{finishreportdocId},'%')
+        </if>
+        <if test="updatetime != null and updatetime != ''">
+            AND UPDATETIME LIKE CONCAT('%',#{updatetime},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertDocFinishreportQuility" parameterType="map">
+        INSERT INTO DOC_FINISHREPORT_QUILITY (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{finishreportdocId},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{createtime},
+            #{texturingcode},
+            #{depthstandard},
+            #{depthreal},
+            #{glossstandard},
+            #{glossreal},
+            #{picurl}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateDocFinishreportQuility" parameterType="map">
+        UPDATE DOC_FINISHREPORT_QUILITY SET
+            FINISHREPORTDOC_ID = #{finishreportdocId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime},
+            TEXTURINGCODE = #{texturingcode},
+            DEPTHSTANDARD = #{depthstandard},
+            DEPTHREAL = #{depthreal},
+            GLOSSSTANDARD = #{glossstandard},
+            GLOSSREAL = #{glossreal},
+            PICURL = #{picurl}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteDocFinishreportQuilityByIds" parameterType="list">
+        DELETE FROM DOC_FINISHREPORT_QUILITY WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

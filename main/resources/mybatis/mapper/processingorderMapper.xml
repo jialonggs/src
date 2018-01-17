@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 订单表 记录单笔订单(ProcessingOrder) -->
+<mapper namespace="mysql.processingorder">
+    <!-- 结果映射 -->
+    <resultMap id="processingorderMap" type="ProcessingorderEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, PROJECT_ID, ORDERNAME, CREATETIME, STATUS, 
+        FINISHTIME, PROCESSINGTYPE, WORKSHOPHEAD, URGENCY, HASREMARK, 
+        EXPECTED, QRCODEINFO, UPDATETIME, ISDELETE, ADDUSER, 
+        SENDMODUL_ID
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="getOrder" resultMap="processingorderMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM ProcessingOrder WHERE 1 = 1
+        <if test="projectId != null and projectId != ''">
+            AND PROJECT_ID =#{projectId}
+        </if>
+        <if test="ordername != null and ordername != ''">
+            AND ORDERNAME LIKE CONCAT('%',#{ordername},'%')
+        </if>
+        <if test="adduser != null and adduser != ''">
+            AND adduser = #{adduser}
+        </if>
+        <if test="pkGuid != null and pkGuid != ''">
+            AND PK_GUID = #{pkGuid}
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertOrder" parameterType="map">
+        INSERT INTO ProcessingOrder (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{projectId},
+            #{ordername},
+            now(),
+            #{status},
+            #{finishtime},
+            #{processingtype},
+            #{workshophead},
+            #{urgency},
+            #{hasremark},
+            #{expected},
+            #{qrcodeinfo},
+            now(),
+            #{isdelete},
+            #{adduser},
+            #{sendmodulId}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateOrder" parameterType="map">
+        UPDATE ProcessingOrder SET
+            PROJECT_ID = #{projectId},
+            ORDERNAME = #{ordername},
+            CREATETIME = #{createtime},
+            STATUS = #{status},
+            FINISHTIME = #{finishtime},
+            PROCESSINGTYPE = #{processingtype},
+            WORKSHOPHEAD = #{workshophead},
+            URGENCY = #{urgency},
+            HASREMARK = #{hasremark},
+            EXPECTED = #{expected},
+            QRCODEINFO = #{qrcodeinfo},
+            now(),
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            SENDMODUL_ID = #{sendmodulId}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteProcessingorderByIds" parameterType="list">
+        DELETE FROM ProcessingOrder WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 基本流程分配表模板(BASE_WORKFLOW) -->
+<mapper namespace="mysql.baseWorkflow">
+    <!-- 结果映射 -->
+    <resultMap id="baseWorkflowMap" type="BaseWorkflowEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, NAME, WORKFLOWNUM, UPDATETIME, ISDELETE, 
+        ADDUSER, CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findBaseWorkflowByCondition" resultMap="baseWorkflowMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM BASE_WORKFLOW WHERE 1 = 1
+        <if test="name != null and name != ''">
+            AND NAME LIKE CONCAT('%',#{name},'%')
+        </if>
+        <if test="workflownum != null and workflownum != ''">
+            AND WORKFLOWNUM LIKE CONCAT('%',#{workflownum},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertBaseWorkflow" parameterType="map">
+        INSERT INTO BASE_WORKFLOW (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{name},
+            #{workflownum},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateBaseWorkflow" parameterType="map">
+        UPDATE BASE_WORKFLOW SET
+            NAME = #{name},
+            WORKFLOWNUM = #{workflownum},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteBaseWorkflowByIds" parameterType="list">
+        DELETE FROM BASE_WORKFLOW WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

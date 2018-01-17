@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 基础步骤 流程关系表(BASE_UNITSTEP_WORKFLOW) -->
+<mapper namespace="mysql.baseUnitstepWorkflow">
+    <!-- 结果映射 -->
+    <resultMap id="baseUnitstepWorkflowMap" type="BaseUnitstepWorkflowEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, STEP_ID, WORKFLOW_ID, UPDATETIME, ISDELETE, 
+        ADDUSER, CREATETIME, STEPINDEX
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findBaseUnitstepWorkflowByCondition" resultMap="baseUnitstepWorkflowMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM BASE_UNITSTEP_WORKFLOW WHERE 1 = 1
+        <if test="stepId != null and stepId != ''">
+            AND STEP_ID LIKE CONCAT('%',#{stepId},'%')
+        </if>
+        <if test="workflowId != null and workflowId != ''">
+            AND WORKFLOW_ID LIKE CONCAT('%',#{workflowId},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertBaseUnitstepWorkflow" parameterType="map">
+        INSERT INTO BASE_UNITSTEP_WORKFLOW (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{stepId},
+            #{workflowId},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{createtime},
+            #{stepindex}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateBaseUnitstepWorkflow" parameterType="map">
+        UPDATE BASE_UNITSTEP_WORKFLOW SET
+            STEP_ID = #{stepId},
+            WORKFLOW_ID = #{workflowId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime},
+            STEPINDEX = #{stepindex}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteBaseUnitstepWorkflowByIds" parameterType="list">
+        DELETE FROM BASE_UNITSTEP_WORKFLOW WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

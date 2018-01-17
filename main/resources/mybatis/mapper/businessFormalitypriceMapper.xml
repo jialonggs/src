@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 正式报价单(BUSINESS_FORMALITYPRICE) -->
+<mapper namespace="mysql.businessFormalityprice">
+    <!-- 结果映射 -->
+    <resultMap id="businessFormalitypriceMap" type="BusinessFormalitypriceEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, PROJECT_ID, FORECASTPRICE_ID, TEL, FAX, 
+        CARTYPE, STATUS, ADDTIME, APPROVER, APPROVETIME, 
+        TOTLEPRICE, ADDUSER, INSTRUCTIONS, SENDDATE, PAYTYPE, 
+        DELIVERYTIME, ADDRESSEE, TO, CONTACTTEL, PROCESSINGUNIT, 
+        MOULDNAME, TEXTURINGPRICE, POLISHINGPRICE, EXTRAPRICE, ISDELETE, 
+        UPDATETIME, CREATETIME, REMARK
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findBusinessFormalitypriceByCondition" resultMap="businessFormalitypriceMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM BUSINESS_FORMALITYPRICE WHERE 1 = 1
+        <if test="projectId != null and projectId != ''">
+            AND PROJECT_ID LIKE CONCAT('%',#{projectId},'%')
+        </if>
+        <if test="forecastpriceId != null and forecastpriceId != ''">
+            AND FORECASTPRICE_ID LIKE CONCAT('%',#{forecastpriceId},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertBusinessFormalityprice" parameterType="map">
+        INSERT INTO BUSINESS_FORMALITYPRICE (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{projectId},
+            #{forecastpriceId},
+            #{tel},
+            #{fax},
+            #{cartype},
+            #{status},
+            #{addtime},
+            #{approver},
+            #{approvetime},
+            #{totleprice},
+            #{adduser},
+            #{instructions},
+            #{senddate},
+            #{paytype},
+            #{deliverytime},
+            #{addressee},
+            #{to},
+            #{contacttel},
+            #{processingunit},
+            #{mouldname},
+            #{texturingprice},
+            #{polishingprice},
+            #{extraprice},
+            #{isdelete},
+            #{updatetime},
+            #{createtime},
+            #{remark}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateBusinessFormalityprice" parameterType="map">
+        UPDATE BUSINESS_FORMALITYPRICE SET
+            PROJECT_ID = #{projectId},
+            FORECASTPRICE_ID = #{forecastpriceId},
+            TEL = #{tel},
+            FAX = #{fax},
+            CARTYPE = #{cartype},
+            STATUS = #{status},
+            ADDTIME = #{addtime},
+            APPROVER = #{approver},
+            APPROVETIME = #{approvetime},
+            TOTLEPRICE = #{totleprice},
+            ADDUSER = #{adduser},
+            INSTRUCTIONS = #{instructions},
+            SENDDATE = #{senddate},
+            PAYTYPE = #{paytype},
+            DELIVERYTIME = #{deliverytime},
+            ADDRESSEE = #{addressee},
+            TO = #{to},
+            CONTACTTEL = #{contacttel},
+            PROCESSINGUNIT = #{processingunit},
+            MOULDNAME = #{mouldname},
+            TEXTURINGPRICE = #{texturingprice},
+            POLISHINGPRICE = #{polishingprice},
+            EXTRAPRICE = #{extraprice},
+            ISDELETE = #{isdelete},
+            UPDATETIME = #{updatetime},
+            CREATETIME = #{createtime},
+            REMARK = #{remark}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteBusinessFormalitypriceByIds" parameterType="list">
+        DELETE FROM BUSINESS_FORMALITYPRICE WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

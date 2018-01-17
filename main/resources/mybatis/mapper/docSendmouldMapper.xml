@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 发模通知单(DOC_SENDMOULD) -->
+<mapper namespace="mysql.docSendmould">
+    <!-- 结果映射 -->
+    <resultMap id="docSendmouldMap" type="DocSendmouldEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, DOC_ID, UPDATETIME, ISDELETE, ADDUSER, 
+        REMARK, SENDTIME, MAIL, WOODENCASE, PALLET, 
+        LIFTINGRING, CARNUM, DRIVERPHONE, PICURL, FREIGHTTYPE, 
+        CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findDocSendmouldByCondition" resultMap="docSendmouldMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM DOC_SENDMOULD WHERE 1 = 1
+        <if test="docId != null and docId != ''">
+            AND DOC_ID LIKE CONCAT('%',#{docId},'%')
+        </if>
+        <if test="updatetime != null and updatetime != ''">
+            AND UPDATETIME LIKE CONCAT('%',#{updatetime},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertDocSendmould" parameterType="map">
+        INSERT INTO DOC_SENDMOULD (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{docId},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{remark},
+            #{sendtime},
+            #{mail},
+            #{woodencase},
+            #{pallet},
+            #{liftingring},
+            #{carnum},
+            #{driverphone},
+            #{picurl},
+            #{freighttype},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateDocSendmould" parameterType="map">
+        UPDATE DOC_SENDMOULD SET
+            DOC_ID = #{docId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            REMARK = #{remark},
+            SENDTIME = #{sendtime},
+            MAIL = #{mail},
+            WOODENCASE = #{woodencase},
+            PALLET = #{pallet},
+            LIFTINGRING = #{liftingring},
+            CARNUM = #{carnum},
+            DRIVERPHONE = #{driverphone},
+            PICURL = #{picurl},
+            FREIGHTTYPE = #{freighttype},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteDocSendmouldByIds" parameterType="list">
+        DELETE FROM DOC_SENDMOULD WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

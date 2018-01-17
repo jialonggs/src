@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 文档  步骤关系表(BASE_UNITSTRP_DOCTYPE) -->
+<mapper namespace="mysql.baseUnitstrpDoctype">
+    <!-- 结果映射 -->
+    <resultMap id="baseUnitstrpDoctypeMap" type="BaseUnitstrpDoctypeEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, DOCTYPE_ID, UNITSTEP_ID, UPDATETIME, ISDELETE, 
+        ADDUSER, CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findBaseUnitstrpDoctypeByCondition" resultMap="baseUnitstrpDoctypeMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM BASE_UNITSTRP_DOCTYPE WHERE 1 = 1
+        <if test="doctypeId != null and doctypeId != ''">
+            AND DOCTYPE_ID LIKE CONCAT('%',#{doctypeId},'%')
+        </if>
+        <if test="unitstepId != null and unitstepId != ''">
+            AND UNITSTEP_ID LIKE CONCAT('%',#{unitstepId},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertBaseUnitstrpDoctype" parameterType="map">
+        INSERT INTO BASE_UNITSTRP_DOCTYPE (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{doctypeId},
+            #{unitstepId},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateBaseUnitstrpDoctype" parameterType="map">
+        UPDATE BASE_UNITSTRP_DOCTYPE SET
+            DOCTYPE_ID = #{doctypeId},
+            UNITSTEP_ID = #{unitstepId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteBaseUnitstrpDoctypeByIds" parameterType="list">
+        DELETE FROM BASE_UNITSTRP_DOCTYPE WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

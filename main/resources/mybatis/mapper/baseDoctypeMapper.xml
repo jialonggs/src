@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 文档表(BASE_DOCTYPE) -->
+<mapper namespace="mysql.baseDoctype">
+    <!-- 结果映射 -->
+    <resultMap id="baseDoctypeMap" type="BaseDoctypeEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, DOCNAME, DOCCODE, UPDATETIME, ISDELETE, 
+        ADDUSER, CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findBaseDoctypeByCondition" resultMap="baseDoctypeMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM BASE_DOCTYPE WHERE 1 = 1
+        <if test="docname != null and docname != ''">
+            AND DOCNAME LIKE CONCAT('%',#{docname},'%')
+        </if>
+        <if test="doccode != null and doccode != ''">
+            AND DOCCODE LIKE CONCAT('%',#{doccode},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertBaseDoctype" parameterType="map">
+        INSERT INTO BASE_DOCTYPE (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{docname},
+            #{doccode},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateBaseDoctype" parameterType="map">
+        UPDATE BASE_DOCTYPE SET
+            DOCNAME = #{docname},
+            DOCCODE = #{doccode},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteBaseDoctypeByIds" parameterType="list">
+        DELETE FROM BASE_DOCTYPE WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

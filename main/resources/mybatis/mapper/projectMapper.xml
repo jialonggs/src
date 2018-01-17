@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 项目表(Project) -->
+<mapper namespace="com.jialong.jlmanager.dao.Iterface.ProjectDaoIF">
+    <!-- 结果映射 -->
+    <resultMap id="projectMap" type="com.jialong.jlmanager.model.ProjectEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, PROJECTNAME, ADDTIME, STATUS, CLIENTCOMPANY, 
+        FINISHTIME, ADDUSER, ISDELETE, UPDATETIME, CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="getProjectList" resultMap="projectMap" parameterType="com.jialong.jlmanager.model.ProjectEntity">
+        SELECT
+        <include refid="allColumns" />
+        FROM Project WHERE 1 = 1
+        <if test="projectname != null and projectname != ''">
+            AND PROJECTNAME LIKE CONCAT('%',#{projectname},'%')
+        </if>
+        <if test="addtime != null and addtime != ''">
+            AND ADDTIME LIKE CONCAT('%',#{addtime},'%')
+        </if>
+        <if test="adduser != null and adduser != ''">
+            AND ADDUSER = #{adduser}
+        </if>
+        <if test="pkGuid != null and pkGuid != ''">
+            AND PK_GUID = #{pkGuid}
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertProject" parameterType="com.jialong.jlmanager.model.ProjectEntity">
+        INSERT INTO Project (<include refid="allColumns" />)
+        VALUES (
+            uuid(),
+            #{projectname},
+            #{addtime},
+            #{status},
+            #{clientcompany},
+            #{finishtime},
+            #{adduser},
+            #{isdelete},
+            now(),
+            now(),
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateProject" parameterType="map">
+        UPDATE Project SET
+            PROJECTNAME = #{projectname},
+            ADDTIME = #{addtime},
+            STATUS = #{status},
+            CLIENTCOMPANY = #{clientcompany},
+            FINISHTIME = #{finishtime},
+            ADDUSER = #{adduser},
+            ISDELETE = #{isdelete},
+            UPDATETIME = #{updatetime},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteProjectByIds" parameterType="list">
+        DELETE FROM Project WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 前期报告书零件信息(DOC_PREVIOUS_PARTINFO) -->
+<mapper namespace="mysql.docPreviousPartinfo">
+    <!-- 结果映射 -->
+    <resultMap id="docPreviousPartinfoMap" type="DocPreviousPartinfoEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, REPORTDOC_ID, UPDATETIME, ISDELETE, ADDUSER, 
+        CREATETIME, CARTYPE, PARTSCODE, PARTSNAME, TEXTURINGCODE, 
+        TEXTURELUSTER, TEXTUREDEPTH, TEXTUREDIRECTION, TEXTUREAREA, OPTICALMARGIN, 
+        OPTICALMARGINDIMENSION, TOUCHAREA, LINE, LASTSMOOTHSURFACE, NOETCH, 
+        CKD, PLASTIC, SPRAYPAINT, SPRAYPAINTDIMENSION
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findDocPreviousPartinfoByCondition" resultMap="docPreviousPartinfoMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM DOC_PREVIOUS_PARTINFO WHERE 1 = 1
+        <if test="reportdocId != null and reportdocId != ''">
+            AND REPORTDOC_ID LIKE CONCAT('%',#{reportdocId},'%')
+        </if>
+        <if test="updatetime != null and updatetime != ''">
+            AND UPDATETIME LIKE CONCAT('%',#{updatetime},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertDocPreviousPartinfo" parameterType="map">
+        INSERT INTO DOC_PREVIOUS_PARTINFO (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{reportdocId},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{createtime},
+            #{cartype},
+            #{partscode},
+            #{partsname},
+            #{texturingcode},
+            #{textureluster},
+            #{texturedepth},
+            #{texturedirection},
+            #{texturearea},
+            #{opticalmargin},
+            #{opticalmargindimension},
+            #{toucharea},
+            #{line},
+            #{lastsmoothsurface},
+            #{noetch},
+            #{ckd},
+            #{plastic},
+            #{spraypaint},
+            #{spraypaintdimension}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateDocPreviousPartinfo" parameterType="map">
+        UPDATE DOC_PREVIOUS_PARTINFO SET
+            REPORTDOC_ID = #{reportdocId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime},
+            CARTYPE = #{cartype},
+            PARTSCODE = #{partscode},
+            PARTSNAME = #{partsname},
+            TEXTURINGCODE = #{texturingcode},
+            TEXTURELUSTER = #{textureluster},
+            TEXTUREDEPTH = #{texturedepth},
+            TEXTUREDIRECTION = #{texturedirection},
+            TEXTUREAREA = #{texturearea},
+            OPTICALMARGIN = #{opticalmargin},
+            OPTICALMARGINDIMENSION = #{opticalmargindimension},
+            TOUCHAREA = #{toucharea},
+            LINE = #{line},
+            LASTSMOOTHSURFACE = #{lastsmoothsurface},
+            NOETCH = #{noetch},
+            CKD = #{ckd},
+            PLASTIC = #{plastic},
+            SPRAYPAINT = #{spraypaint},
+            SPRAYPAINTDIMENSION = #{spraypaintdimension}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteDocPreviousPartinfoByIds" parameterType="list">
+        DELETE FROM DOC_PREVIOUS_PARTINFO WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

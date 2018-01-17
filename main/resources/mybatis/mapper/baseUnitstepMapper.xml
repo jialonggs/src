@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 步骤表(BASE_UNITSTEP) -->
+<mapper namespace="mysql.baseUnitstep">
+    <!-- 结果映射 -->
+    <resultMap id="baseUnitstepMap" type="BaseUnitstepEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, STEPNAME, ISDOC, ISBUSINESSREMARK, UPDATETIME, 
+        ISDELETE, ADDUSER, CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findBaseUnitstepByCondition" resultMap="baseUnitstepMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM BASE_UNITSTEP WHERE 1 = 1
+        <if test="stepname != null and stepname != ''">
+            AND STEPNAME LIKE CONCAT('%',#{stepname},'%')
+        </if>
+        <if test="isdoc != null and isdoc != ''">
+            AND ISDOC LIKE CONCAT('%',#{isdoc},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertBaseUnitstep" parameterType="map">
+        INSERT INTO BASE_UNITSTEP (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{stepname},
+            #{isdoc},
+            #{isbusinessremark},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateBaseUnitstep" parameterType="map">
+        UPDATE BASE_UNITSTEP SET
+            STEPNAME = #{stepname},
+            ISDOC = #{isdoc},
+            ISBUSINESSREMARK = #{isbusinessremark},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteBaseUnitstepByIds" parameterType="list">
+        DELETE FROM BASE_UNITSTEP WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

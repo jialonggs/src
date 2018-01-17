@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 基本的文档(BASE_DOC) -->
+<mapper namespace="mysql.baseDoc">
+    <!-- 结果映射 -->
+    <resultMap id="baseDocMap" type="BaseDocEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, DOCTYPE_ID, UPDATETIME, ISDELETE, ADDUSER, 
+        CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findBaseDocByCondition" resultMap="baseDocMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM BASE_DOC WHERE 1 = 1
+        <if test="doctypeId != null and doctypeId != ''">
+            AND DOCTYPE_ID LIKE CONCAT('%',#{doctypeId},'%')
+        </if>
+        <if test="updatetime != null and updatetime != ''">
+            AND UPDATETIME LIKE CONCAT('%',#{updatetime},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertBaseDoc" parameterType="map">
+        INSERT INTO BASE_DOC (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{doctypeId},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateBaseDoc" parameterType="map">
+        UPDATE BASE_DOC SET
+            DOCTYPE_ID = #{doctypeId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteBaseDocByIds" parameterType="list">
+        DELETE FROM BASE_DOC WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 控制单书(DOC_CONTROL_INFO) -->
+<mapper namespace="mysql.docControlInfo">
+    <!-- 结果映射 -->
+    <resultMap id="docControlInfoMap" type="DocControlInfoEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, DOC_ID, ORDER_ID，UPDATETIME, ISDELETE, ADDUSER,
+        CREATETIME, AREA, STOMATAL, CRACKS, GAP, 
+        WELDINGSCAR, EDM, ABRASIVEWIRE, ROUGH, OPTICALEDGE, 
+        REMARK, GLOSSAREA, LASTMODULE, LASTMODULENUM, CKD, 
+        CKDNUM, EDGEWEAR, OPTICALEDGESINGLE, OPTICALEDGEMUTI
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="getDocControllinfo" resultMap="docControlInfoMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM DOC_CONTROL_INFO WHERE 1 = 1
+        <if test="orderId != null and orderId != ''">
+            AND ORDER_ID=#{orderId}
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertDocControlInfo" parameterType="map">
+        INSERT INTO DOC_CONTROL_INFO (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{docId},
+           #{orderId},
+            now(),
+            0
+            #{adduser},
+            now(),
+            #{area},
+            #{stomatal},
+            #{cracks},
+            #{gap},
+            #{weldingscar},
+            #{edm},
+            #{abrasivewire},
+            #{rough},
+            #{opticaledge},
+            #{remark},
+            #{glossarea},
+            #{lastmodule},
+            #{lastmodulenum},
+            #{ckd},
+            #{ckdnum},
+            #{edgewear},
+            #{opticaledgesingle},
+            #{opticaledgemuti}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateDocControlInfo" parameterType="map">
+        UPDATE DOC_CONTROL_INFO SET
+            DOC_ID = #{docId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime},
+            AREA = #{area},
+            STOMATAL = #{stomatal},
+            CRACKS = #{cracks},
+            GAP = #{gap},
+            WELDINGSCAR = #{weldingscar},
+            EDM = #{edm},
+            ABRASIVEWIRE = #{abrasivewire},
+            ROUGH = #{rough},
+            OPTICALEDGE = #{opticaledge},
+            REMARK = #{remark},
+            GLOSSAREA = #{glossarea},
+            LASTMODULE = #{lastmodule},
+            LASTMODULENUM = #{lastmodulenum},
+            CKD = #{ckd},
+            CKDNUM = #{ckdnum},
+            EDGEWEAR = #{edgewear},
+            OPTICALEDGESINGLE = #{opticaledgesingle},
+            OPTICALEDGEMUTI = #{opticaledgemuti}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteDocControlInfoByIds" parameterType="list">
+        DELETE FROM DOC_CONTROL_INFO WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 收模订单列表(COLLECT_PARTINFO) -->
+<mapper namespace="mysql.collectPartinfo">
+    <!-- 结果映射 -->
+    <resultMap id="collectPartinfoMap" type="com.jialong.jlmanager.model.CollectPartinfoEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, ORDER_ID, UPDATETIME, ISDELETE, ADDUSER, 
+        REMARK, STATUS, MOULDNAME, SPIT_ID, SPITTIME, 
+        COLLECTMOULD_ID, SENDMOULD_ID, PICURL, SELECT
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="getModule" resultMap="collectPartinfoMap" parameterType="com.jialong.jlmanager.model.CollectPartinfoEntity">
+        SELECT
+        <include refid="allColumns" />
+        FROM COLLECT_PARTINFO WHERE 1 = 1
+        <if test="orderId != null and orderId != ''">
+            AND ORDER_ID = #{orderId}
+        </if>
+        <if test="collectmouldId != null and collectmouldId != ''">
+            AND COLLECTMOULD_ID = #{collectmouldId}
+        </if>
+        <if test="adduser != null and adduser != ''">
+            AND ADDUSER = #{adduser}
+        </if>
+        <if test="pkGuid != null and pkGuid != ''">
+            AND PK_GUID = #{pkGuid}
+        </if>
+        <if test="updatetime != null and updatetime != ''">
+            AND UPDATETIME LIKE CONCAT('%',#{updatetime},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertCollectPart" parameterType="com.jialong.jlmanager.model.CollectPartinfoEntity">
+        INSERT INTO COLLECT_PARTINFO (<include refid="allColumns" />)
+        VALUES (
+            uuid(),
+            #{orderId},
+            now(),
+            0,
+            #{adduser},
+            #{remark},
+            #{status},
+            #{mouldname},
+            #{spitId},
+            #{spittime},
+            #{collectmouldId},
+            #{sendmouldId},
+            #{picurl},
+            #{select}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateCollectPart" parameterType="com.jialong.jlmanager.model.CollectPartinfoEntity">
+        UPDATE COLLECT_PARTINFO SET
+            ORDER_ID = #{orderId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            REMARK = #{remark},
+            STATUS = #{status},
+            MOULDNAME = #{mouldname},
+            SPIT_ID = #{spitId},
+            SPITTIME = #{spittime},
+            COLLECTMOULD_ID = #{collectmouldId},
+            SENDMOULD_ID = #{sendmouldId},
+            PICURL = #{picurl},
+            SELECT = #{select}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteCollectPartinfoByIds" parameterType="list">
+        DELETE FROM COLLECT_PARTINFO WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

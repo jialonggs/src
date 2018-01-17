@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- USER_LOGIN -->
+<mapper namespace="com.jialong.jlmanager.dao.Iterface.UserDaoIF">
+    <resultMap id="userLoginMap" type="com.jialong.jlmanager.model.UserLoginEntity"></resultMap>
+    <sql id="allColumns">
+        PK_GUID, USERNAME, PASSWORD, ROLE, SEX, 
+        DEPARTMENT_ID, MOBILE, ADDUSER, ISDELETE, UPDATETIME, 
+        CREATETIME
+    </sql>
+    <select id="getPassword" resultMap="userLoginMap" parameterType="String">
+        SELECT
+        *
+        FROM USER_LOGIN WHERE ISDELETE != 1
+        <if test="_parameter != null and _parameter != ''">
+            AND USERNAME = #{userName};
+        </if>
+    </select>
+    <select id="findUserLoginByCondition" resultMap="userLoginMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM USER_LOGIN WHERE 1 = 1
+        <if test="username != null and username != ''">
+            AND USERNAME LIKE CONCAT('%',#{username},'%')
+        </if>
+        <if test="password != null and password != ''">
+            AND PASSWORD LIKE CONCAT('%',#{password},'%')
+        </if>
+    </select>
+    <insert id="insertUserLogin" parameterType="com.jialong.jlmanager.model.UserLoginEntity">
+        INSERT INTO USER_LOGIN (<include refid="allColumns" />)
+        VALUES (
+            uuid(),
+            #{username},
+            #{password},
+            #{role},
+            #{sex},
+            #{departmentId},
+            #{mobile},
+            #{adduser},
+            0,
+            now(),
+            now()
+        )
+    </insert>
+    <update id="updateUserLogin" parameterType="map">
+        UPDATE USER_LOGIN SET
+            USERNAME = #{username},
+            PASSWORD = #{password},
+            ROLE = #{role},
+            SEX = #{sex},
+            DEPARTMENT_ID = #{departmentId},
+            MOBILE = #{mobile},
+            ISDELETE = #{isdelete},
+            UPDATETIME = now(),
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    <delete id="deleteUserLoginByIds" parameterType="list">
+        DELETE FROM USER_LOGIN WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

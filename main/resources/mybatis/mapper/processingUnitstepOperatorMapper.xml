@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 步骤操作员关系表(PROCESSING_UNITSTEP_OPERATOR) -->
+<mapper namespace="mysql.processingUnitstepOperator">
+    <!-- 结果映射 -->
+    <resultMap id="processingUnitstepOperatorMap" type="ProcessingUnitstepOperatorEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, OPERATOR_ID, UPDATETIME, ISDELETE, ADDUSER, 
+        CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findProcessingUnitstepOperatorByCondition" resultMap="processingUnitstepOperatorMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM PROCESSING_UNITSTEP_OPERATOR WHERE 1 = 1
+        <if test="operatorId != null and operatorId != ''">
+            AND OPERATOR_ID LIKE CONCAT('%',#{operatorId},'%')
+        </if>
+        <if test="updatetime != null and updatetime != ''">
+            AND UPDATETIME LIKE CONCAT('%',#{updatetime},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertProcessingUnitstepOperator" parameterType="map">
+        INSERT INTO PROCESSING_UNITSTEP_OPERATOR (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{operatorId},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateProcessingUnitstepOperator" parameterType="map">
+        UPDATE PROCESSING_UNITSTEP_OPERATOR SET
+            OPERATOR_ID = #{operatorId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteProcessingUnitstepOperatorByIds" parameterType="list">
+        DELETE FROM PROCESSING_UNITSTEP_OPERATOR WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

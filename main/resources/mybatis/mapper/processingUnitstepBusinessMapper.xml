@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 商务总监步骤备注表(PROCESSING_UNITSTEP_BUSINESS) -->
+<mapper namespace="mysql.processingUnitstepBusiness">
+    <!-- 结果映射 -->
+    <resultMap id="processingUnitstepBusinessMap" type="ProcessingUnitstepBusinessEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, BUSINESS_ID, UPDATETIME, ISDELETE, ADDUSER, 
+        REMARK, PICURL, CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findProcessingUnitstepBusinessByCondition" resultMap="processingUnitstepBusinessMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM PROCESSING_UNITSTEP_BUSINESS WHERE 1 = 1
+        <if test="businessId != null and businessId != ''">
+            AND BUSINESS_ID LIKE CONCAT('%',#{businessId},'%')
+        </if>
+        <if test="updatetime != null and updatetime != ''">
+            AND UPDATETIME LIKE CONCAT('%',#{updatetime},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertProcessingUnitstepBusiness" parameterType="map">
+        INSERT INTO PROCESSING_UNITSTEP_BUSINESS (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{businessId},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{remark},
+            #{picurl},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateProcessingUnitstepBusiness" parameterType="map">
+        UPDATE PROCESSING_UNITSTEP_BUSINESS SET
+            BUSINESS_ID = #{businessId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            REMARK = #{remark},
+            PICURL = #{picurl},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteProcessingUnitstepBusinessByIds" parameterType="list">
+        DELETE FROM PROCESSING_UNITSTEP_BUSINESS WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

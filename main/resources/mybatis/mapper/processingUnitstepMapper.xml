@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 分配工作步骤表(PROCESSING_UNITSTEP) -->
+<mapper namespace="mysql.processingUnitstep">
+    <!-- 结果映射 -->
+    <resultMap id="processingUnitstepMap" type="ProcessingUnitstepEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, BASEUNITSTEP_ID, PROCESSIONGWORKFLOW_ID, STATUS, UPDATETIME, 
+        ISDELETE, ADDUSER, STARTTIME, FINISHTIME, CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findProcessingUnitstepByCondition" resultMap="processingUnitstepMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM PROCESSING_UNITSTEP WHERE 1 = 1
+        <if test="baseunitstepId != null and baseunitstepId != ''">
+            AND BASEUNITSTEP_ID LIKE CONCAT('%',#{baseunitstepId},'%')
+        </if>
+        <if test="processiongworkflowId != null and processiongworkflowId != ''">
+            AND PROCESSIONGWORKFLOW_ID LIKE CONCAT('%',#{processiongworkflowId},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertProcessingUnitstep" parameterType="map">
+        INSERT INTO PROCESSING_UNITSTEP (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{baseunitstepId},
+            #{processiongworkflowId},
+            #{status},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{starttime},
+            #{finishtime},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateProcessingUnitstep" parameterType="map">
+        UPDATE PROCESSING_UNITSTEP SET
+            BASEUNITSTEP_ID = #{baseunitstepId},
+            PROCESSIONGWORKFLOW_ID = #{processiongworkflowId},
+            STATUS = #{status},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            STARTTIME = #{starttime},
+            FINISHTIME = #{finishtime},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteProcessingUnitstepByIds" parameterType="list">
+        DELETE FROM PROCESSING_UNITSTEP WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

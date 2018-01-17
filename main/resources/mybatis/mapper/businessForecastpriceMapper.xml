@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Welcome to use the TableGo Tools.
+
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 商务预报价单(BUSINESS_FORECASTPRICE) -->
+<mapper namespace="com.jialong.jlmanager.dao.Iterface.BusinessForecastPriceDaoIF">
+    <!-- 结果映射 -->
+    <resultMap id="businessForecastpriceMap" type="com.jialong.jlmanager.model.BusinessForecastpriceEntity">
+        <result property="pkGuid" column="PK_GUID"/>
+        <result property="projectId" column="PROJECT_ID"/>
+        <result property="instructions" column="INSTRUCTIONS"/>
+        <result property="tel" column="TEL"/>
+        <result property="fax" column="FAX"/>
+        <result property="clientcompany" column="CLIENTCOMPANY"/>
+        <result property="status" column="STATUS"/>
+        <result property="approver" column="APPROVER"/>
+        <result property="approvetime" column="APPROVETIME"/>
+        <result property="tax" column="TAX"/>
+        <result property="texturingcode" column="TOTLEPRICE"/>
+        <result property="totleprice" column="DYNAMICMODEL"/>
+        <result property="isdelete" column="ISDELETE"/>
+        <result property="adduser" column="ADDUSER"/>
+        <result property="remark" column="REMARK"/>
+        <result property="createtime" column="CREATETIME"/>
+        <collection column="PK_GUID" property="businessForecastpricelistEntities" ofType="com.jialong.jlmanager.model.BusinessForecastpricelistEntity">
+            <result property="pkGuid" column="PK_GUID"/>
+            <result property="forecastpriceId" column="FORECASTPRICE_ID"/>
+            <result property="name" column="NAME"/>
+            <result property="picurl" column="PICURL"/>
+            <result property="area" column="AREA"/>
+            <result property="addtime" column="ADDTIME"/>
+            <result property="status" column="STATUS"/>
+            <result property="number" column="NUMBER"/>
+            <result property="cartype" column="CARTYPE"/>
+            <result property="unitprice" column="UNITPRICE"/>
+            <result property="texturingcode" column="TEXTURINGCODE"/>
+            <result property="dynamicmodel" column="DYNAMICMODEL"/>
+            <result property="coefficient" column="COEFFICIENT"/>
+            <result property="isdelete" column="ISDELETE"/>
+            <result property="adduser" column="ADDUSER"/>
+            <result property="remark" column="REMARK"/>
+            <result property="createtime" column="CREATETIME"/>
+        </collection>
+    </resultMap>
+
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, PROJECT_ID, INSTRUCTIONS, TEL, FAX,
+        CLIENTCOMPANY, STATUS, CREATETIME, APPROVER, APPROVETIME,
+        TAX, TOTLEPRICE, UPDATETIME, ISDELETE, ADDUSER,
+        REMARK
+    </sql>
+
+    <sql id="list_allColums">
+        PK_GUID, FORECASTPRICE_ID, PICURL, AREA,
+        ADDTIME, STATUS, CARTYPE, UNITPRICE,
+        TEXTURINGCODE, TOTLEPRICE, UPDATETIME, DYNAMICMODEL, COEFFICIENT,
+        ISDELETE, ADDUSER, REMARK, CREATETIME
+    </sql>
+
+    <!-- 根据条件查询数据 -->
+    <select id="getBusinessForecastpriceList" resultMap="businessForecastpriceMap" parameterType="com.jialong.jlmanager.model.BusinessForecastpriceEntity">
+        SELECT
+        *
+        FROM BUSINESS_FORECASTPRICE b,BUSINESS_FORECASTPRICELIST l WHERE 1 = 1
+            AND b.PK_GUID=l.FORECASTPRICE_ID
+        <if test="adduser != null and adduser != ''">
+            AND b.adduser = #{adduser}
+        </if>
+    </select>
+
+    <!-- 插入数据 -->
+    <insert id="insertBusinessForecastprice" parameterType="com.jialong.jlmanager.model.BusinessForecastpriceEntity">
+        INSERT INTO BUSINESS_FORECASTPRICE (<include refid="allColumns" />)
+        VALUES (
+        #{business.pkGuid},,
+        #{business.projectId},
+        #{business.instructions},
+        #{business.tel},
+        #{business.fax},
+        #{business.clientcompany},
+        #{business.status},
+        now(),
+        #{business.approver},
+        #{business.approvetime},
+        #{business.tax},
+        #{business.totleprice},
+        now(),
+        0,
+        #{business.adduser},
+        #{business.remark}
+        )
+
+    </insert>
+
+    <insert id="insertBusinessForecastpriceList" parameterType="com.jialong.jlmanager.model.BusinessForecastpriceEntity">
+        insert into BUSINESS_FORECASTPRICELIST (<include refid="list_allColums" />)
+        values
+        <foreach collection="business.businessForecastpricelistEntities" item="item" index="index"  separator=",">
+            (
+            uuid(),
+            #{business.pkGuid},
+            #{item.picurl},
+            #{item.area},
+            #{item.addtime},
+            #{item.status},
+            #{item.cartype},
+            #{item.unitprice},
+            #{item.texturingcode},
+            #{item.totleprice},
+            now(),
+            #{item.dynamicmodel},
+            #{item.coefficient},
+            0,
+            #{item.adduser},
+            #{item.remark},
+            now()
+            )
+        </foreach>
+    </insert>
+    <!-- 修改数据 -->
+    <update id="updateBusinessForecastprice" parameterType="map">
+        UPDATE BUSINESS_FORECASTPRICE SET
+        PROJECT_ID = #{projectId},
+        INSTRUCTIONS = #{instructions},
+        TEL = #{tel},
+        FAX = #{fax},
+        CLIENTCOMPANY = #{clientcompany},
+        STATUS = #{status},
+        CREATETIME = #{createtime},
+        APPROVER = #{approver},
+        APPROVETIME = #{approvetime},
+        TAX = #{tax},
+        TOTLEPRICE = #{totleprice},
+        UPDATETIME = #{updatetime},
+        ISDELETE = #{isdelete},
+        ADDUSER = #{adduser},
+        REMARK = #{remark}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteBusinessForecastpriceByIds" parameterType="list">
+        DELETE FROM BUSINESS_FORECASTPRICE WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

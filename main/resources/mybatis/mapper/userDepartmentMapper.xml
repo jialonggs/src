@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 部门表(USER_DEPARTMENT) -->
+<mapper namespace="mysql.userDepartment">
+    <!-- 结果映射 -->
+    <resultMap id="userDepartmentMap" type="UserDepartmentEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, PARENT_ID, DEPARTMENTNAME, PHONE, LEADER_ID, 
+        ADDUSER, ISDELETE, UPDATETIME, CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findUserDepartmentByCondition" resultMap="userDepartmentMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM USER_DEPARTMENT WHERE 1 = 1
+        <if test="parentId != null and parentId != ''">
+            AND PARENT_ID LIKE CONCAT('%',#{parentId},'%')
+        </if>
+        <if test="departmentname != null and departmentname != ''">
+            AND DEPARTMENTNAME LIKE CONCAT('%',#{departmentname},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertUserDepartment" parameterType="map">
+        INSERT INTO USER_DEPARTMENT (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{parentId},
+            #{departmentname},
+            #{phone},
+            #{leaderId},
+            #{adduser},
+            #{isdelete},
+            #{updatetime},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateUserDepartment" parameterType="map">
+        UPDATE USER_DEPARTMENT SET
+            PARENT_ID = #{parentId},
+            DEPARTMENTNAME = #{departmentname},
+            PHONE = #{phone},
+            LEADER_ID = #{leaderId},
+            ADDUSER = #{adduser},
+            ISDELETE = #{isdelete},
+            UPDATETIME = #{updatetime},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteUserDepartmentByIds" parameterType="list">
+        DELETE FROM USER_DEPARTMENT WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

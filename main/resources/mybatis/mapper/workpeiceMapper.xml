@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 分配工作步骤表(WorkPeice) -->
+<mapper namespace="mysql.workpeice">
+    <!-- 结果映射 -->
+    <resultMap id="workpeiceMap" type="WorkpeiceEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, COLLECTMOULD_ID, NUM, ORDER_ID, UPDATETIME, 
+        ISDELETE, ADDUSER, STARTTIME, FINISHTIME, SPLIT_ID, 
+        SPLITTIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findWorkpeiceByCondition" resultMap="workpeiceMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM WorkPeice WHERE 1 = 1
+        <if test="collectmouldId != null and collectmouldId != ''">
+            AND COLLECTMOULD_ID LIKE CONCAT('%',#{collectmouldId},'%')
+        </if>
+        <if test="num != null and num != ''">
+            AND NUM LIKE CONCAT('%',#{num},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertWorkpeice" parameterType="map">
+        INSERT INTO WorkPeice (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{collectmouldId},
+            #{num},
+            #{orderId},
+            #{updatetime},
+            #{isdelete},
+            #{adduser},
+            #{starttime},
+            #{finishtime},
+            #{splitId},
+            #{splittime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateWorkpeice" parameterType="map">
+        UPDATE WorkPeice SET
+            COLLECTMOULD_ID = #{collectmouldId},
+            NUM = #{num},
+            ORDER_ID = #{orderId},
+            UPDATETIME = #{updatetime},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            STARTTIME = #{starttime},
+            FINISHTIME = #{finishtime},
+            SPLIT_ID = #{splitId},
+            SPLITTIME = #{splittime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteWorkpeiceByIds" parameterType="list">
+        DELETE FROM WorkPeice WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>

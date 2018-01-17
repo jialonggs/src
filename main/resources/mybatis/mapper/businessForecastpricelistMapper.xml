@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Welcome to use the TableGo Tools.
+    
+    http://vipbooks.iteye.com
+    http://blog.csdn.net/vipbooks
+    http://www.cnblogs.com/vipbooks
+    
+    Author:bianj
+    Email:edinsker@163.com
+    Version:5.0.0
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 商务预报价单列表(BUSINESS_FORECASTPRICELIST) -->
+<mapper namespace="mysql.businessForecastpricelist">
+    <!-- 结果映射 -->
+    <resultMap id="businessForecastpricelistMap" type="BusinessForecastpricelistEntity"></resultMap>
+    
+    <!-- 表所有字段 -->
+    <sql id="allColumns">
+        PK_GUID, FORECASTPRICE_ID, NAME, PICURL, AREA, 
+        ADDTIME, STATUS, NUMBER, CARTYPE, UNITPRICE, 
+        TEXTURINGCODE, TOTLEPRICE, UPDATETIME, DYNAMICMODEL, COEFFICIENT, 
+        ISDELETE, ADDUSER, REMARK, CREATETIME
+    </sql>
+    
+    <!-- 根据条件查询数据 -->
+    <select id="findBusinessForecastpricelistByCondition" resultMap="businessForecastpricelistMap" parameterType="map">
+        SELECT
+        <include refid="allColumns" />
+        FROM BUSINESS_FORECASTPRICELIST WHERE 1 = 1
+        <if test="forecastpriceId != null and forecastpriceId != ''">
+            AND FORECASTPRICE_ID LIKE CONCAT('%',#{forecastpriceId},'%')
+        </if>
+        <if test="name != null and name != ''">
+            AND NAME LIKE CONCAT('%',#{name},'%')
+        </if>
+    </select>
+    
+    <!-- 插入数据 -->
+    <insert id="insertBusinessForecastpricelist" parameterType="map">
+        INSERT INTO BUSINESS_FORECASTPRICELIST (<include refid="allColumns" />)
+        VALUES (
+            #{pkGuid},
+            #{forecastpriceId},
+            #{name},
+            #{picurl},
+            #{area},
+            #{addtime},
+            #{status},
+            #{number},
+            #{cartype},
+            #{unitprice},
+            #{texturingcode},
+            #{totleprice},
+            #{updatetime},
+            #{dynamicmodel},
+            #{coefficient},
+            #{isdelete},
+            #{adduser},
+            #{remark},
+            #{createtime}
+        )
+    </insert>
+    
+    <!-- 修改数据 -->
+    <update id="updateBusinessForecastpricelist" parameterType="map">
+        UPDATE BUSINESS_FORECASTPRICELIST SET
+            FORECASTPRICE_ID = #{forecastpriceId},
+            NAME = #{name},
+            PICURL = #{picurl},
+            AREA = #{area},
+            ADDTIME = #{addtime},
+            STATUS = #{status},
+            NUMBER = #{number},
+            CARTYPE = #{cartype},
+            UNITPRICE = #{unitprice},
+            TEXTURINGCODE = #{texturingcode},
+            TOTLEPRICE = #{totleprice},
+            UPDATETIME = #{updatetime},
+            DYNAMICMODEL = #{dynamicmodel},
+            COEFFICIENT = #{coefficient},
+            ISDELETE = #{isdelete},
+            ADDUSER = #{adduser},
+            REMARK = #{remark},
+            CREATETIME = #{createtime}
+        WHERE PK_GUID = #{pkGuid}
+    </update>
+    
+    <!-- 根据主键批量删除数据 -->
+    <delete id="deleteBusinessForecastpricelistByIds" parameterType="list">
+        DELETE FROM BUSINESS_FORECASTPRICELIST WHERE PK_GUID IN
+        <foreach collection="list" index="index" item="pkGuid" open="(" separator="," close=")">
+            #{pkGuid}
+        </foreach>
+    </delete>
+</mapper>
