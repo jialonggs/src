@@ -14,36 +14,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 收模订单列表(COLLECT_PARTINFO) -->
-<mapper namespace="mysql.collectPartinfo">
+<mapper namespace="com.jialong.jlmanager.dao.Iterface.PartInfoDaoIF">
     <!-- 结果映射 -->
-    <resultMap id="collectPartinfoMap" type="com.jialong.jlmanager.model.CollectPartinfoEntity"></resultMap>
+    <resultMap id="collectPartinfoMap" type="CollectPartinfoEntity"></resultMap>
     
     <!-- 表所有字段 -->
     <sql id="allColumns">
         PK_GUID, ORDER_ID, UPDATETIME, ISDELETE, ADDUSER, 
-        REMARK, STATUS, MOULDNAME, SPIT_ID, SPITTIME, 
-        COLLECTMOULD_ID, SENDMOULD_ID, PICURL, SELECT
+        REMARK, STATUS, MOULDNAME, MOULD_NUMBER, CREATETIME,
+        COLLECTMOULD_ID, SENDMOULD_ID, PICURL, ISSELECT
     </sql>
     
     <!-- 根据条件查询数据 -->
-    <select id="getModule" resultMap="collectPartinfoMap" parameterType="com.jialong.jlmanager.model.CollectPartinfoEntity">
+    <select id="getModule" resultMap="collectPartinfoMap" parameterType="map">
         SELECT
         <include refid="allColumns" />
         FROM COLLECT_PARTINFO WHERE 1 = 1
-        <if test="orderId != null and orderId != ''">
-            AND ORDER_ID = #{orderId}
-        </if>
+        <!--<if test="orderId != null and orderId != ''">-->
+            <!--AND ORDER_ID = #{orderId}-->
+        <!--</if>-->
         <if test="collectmouldId != null and collectmouldId != ''">
             AND COLLECTMOULD_ID = #{collectmouldId}
         </if>
-        <if test="adduser != null and adduser != ''">
-            AND ADDUSER = #{adduser}
-        </if>
+        <!--<if test="adduser != null and adduser != ''">-->
+            <!--AND ADDUSER = #{adduser}-->
+        <!--</if>-->
         <if test="pkGuid != null and pkGuid != ''">
             AND PK_GUID = #{pkGuid}
-        </if>
-        <if test="updatetime != null and updatetime != ''">
-            AND UPDATETIME LIKE CONCAT('%',#{updatetime},'%')
         </if>
     </select>
     
@@ -59,8 +56,9 @@
             #{remark},
             #{status},
             #{mouldname},
+            #{number},
             #{spitId},
-            #{spittime},
+            now(),
             #{collectmouldId},
             #{sendmouldId},
             #{picurl},
@@ -78,12 +76,12 @@
             REMARK = #{remark},
             STATUS = #{status},
             MOULDNAME = #{mouldname},
-            SPIT_ID = #{spitId},
-            SPITTIME = #{spittime},
+            MOULD_NUMBER = #{mouldnumber},
+            CREATETIME = #{createtime},
             COLLECTMOULD_ID = #{collectmouldId},
             SENDMOULD_ID = #{sendmouldId},
             PICURL = #{picurl},
-            SELECT = #{select}
+            ISSELECT = #{isselect}
         WHERE PK_GUID = #{pkGuid}
     </update>
     

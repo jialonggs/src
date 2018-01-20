@@ -1,7 +1,5 @@
 package com.jialong.jlmanager.controller;
 
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jialong.jlmanager.bean.RequestBean;
@@ -9,12 +7,12 @@ import com.jialong.jlmanager.bean.ResultBean;
 import com.jialong.jlmanager.file.FileUtil;
 import com.jialong.jlmanager.model.CollectPartinfoEntity;
 import com.jialong.jlmanager.model.DocCollectmouldEntity;
-import com.jialong.jlmanager.service.CollectionService;
-import com.jialong.jlmanager.service.PartService;
+import com.jialong.jlmanager.model.ResponseDataEntity;
+import com.jialong.jlmanager.model.responseModel.CollectmouldListResp;
 import com.jialong.jlmanager.service.impl.CollectionServiceIF;
 import com.jialong.jlmanager.service.impl.PartServiceIF;
+import com.jialong.jlmanager.util.DateFormatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -29,7 +27,6 @@ public class CollectionController {
     @Autowired
     PartServiceIF partService;
 
-
     //收模上传
     @RequestMapping(value="/api/collection/insert", method = RequestMethod.POST)
     @ResponseBody
@@ -38,7 +35,7 @@ public class CollectionController {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         params.getParameter("name");
         //业务数据
-        String data=params.getParameter("Data");
+        String data = params.getParameter("Data");
         String userId=params.getParameter("UserId");
         JSONObject collectionJson=JSONObject.parseObject(data);
         DocCollectmouldEntity docCollectmouldEntity=JSONObject.parseObject(data,DocCollectmouldEntity.class);
@@ -80,31 +77,45 @@ public class CollectionController {
         return JSONObject.toJSONString(resultBean);
     }
 
+    /**
+     * 获取收模列表
+     * @param requestBean
+     * @return
+     */
     @RequestMapping(value = "/api/collection/list", method = RequestMethod.POST )
     @ResponseBody
-    public String getCollectionList(@RequestBody RequestBean requestBean) {
-        JSONObject jsonObject=JSONObject.parseObject(requestBean.getData());
-        DocCollectmouldEntity collect=new DocCollectmouldEntity();
+    public ResponseDataEntity  getCollectionList(@RequestBody RequestBean requestBean) {
+        ResponseDataEntity responseDataEntity = new ResponseDataEntity();
+        DocCollectmouldEntity collect = new DocCollectmouldEntity();
         collect.setAdduser(requestBean.getUserId());
-        List<DocCollectmouldEntity> collectmouldEntities=collectionService.getCollection(collect);
-        JSONArray jsonArray=new JSONArray();
-        for(DocCollectmouldEntity collectmouldEntity:collectmouldEntities){
-            JSONObject collectObject=new JSONObject();
-            jsonObject.put("clientcompany",collectmouldEntity.getClientcompany());
-            CollectPartinfoEntity partinfoEntity=new CollectPartinfoEntity();
-            partinfoEntity.setCollectmouldId(collectmouldEntity.getPkGuid());
-            List<CollectPartinfoEntity> collectPartinfoEntities=partService.getParts(partinfoEntity);
-            jsonObject.put("number",collectPartinfoEntities.size());
-            jsonObject.put("batch",collectmouldEntity.getBatch());
-            jsonObject.put("addTime",collectmouldEntity.getCreatetime());
-            jsonArray.add(jsonObject);
+        List<DocCollectmouldEntity> collectmouldEntities = collectionService.getCollection(collect);
+        if(collectmouldEntities != null && collectmouldEntities.size() > 0 ) { //非空
+            List<CollectmouldListResp> respsList = new ArrayList<CollectmouldListResp>();
+            for(DocCollectmouldEntity docCollectmouldEntity : collectmouldEntities){
+                CollectPartinfoEntity partinfoEntity = new CollectPartinfoEntity();
+                partinfoEntity.setCollectmouldId(docCollectmouldEntity.getPkGuid());
+                // 获取模具信息
+                List<CollectPartinfoEntity> collectPartinfoEntities = partService.getParts(partinfoEntity);
+                CollectmouldListResp resp = new CollectmouldListResp();
+                resp.setMouldNums(0);
+                if(null != collectPartinfoEntities) {
+                    resp.setMouldNums(collectPartinfoEntities.size());
+                }
+                resp.setAddUser(docCollectmouldEntity.getAdduser());
+                resp.setBatch(docCollectmouldEntity.getBatch());
+                resp.setClientCompanyName(docCollectmouldEntity.getClientcompany());
+                resp.setPkGuid(docCollectmouldEntity.getPkGuid());
+                // 对时间进行格式化
+                resp.setCreateTime(DateFormatUtil.stringToString(docCollectmouldEntity.getCreatetime(),DateFormatUtil.YYYY_MM_DD));
+                respsList.add(resp);
+            }
+            responseDataEntity.setCode(0);
+            responseDataEntity.setData(respsList);
+        } else {
+            responseDataEntity.setCode(3);
+            responseDataEntity.setMsg("数据查询为空");
         }
-        JSONObject resultDataObject=new JSONObject();
-        resultDataObject.put("collectionList",jsonArray);
-        ResultBean resultBean=new ResultBean();
-        resultBean.setSuccess(1);
-        resultBean.setData(resultDataObject.toJSONString());
-        return JSONObject.toJSONString(resultBean);
+        return responseDataEntity;
     }
 
     @RequestMapping(value = "/api/collection/detail", method = { RequestMethod.POST, RequestMethod.GET })

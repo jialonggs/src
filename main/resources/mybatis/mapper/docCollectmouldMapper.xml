@@ -13,18 +13,18 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- 首发模通知单(DOC_COLLECTMOULD) -->
-<mapper namespace="mysql.docCollectmould">
+<!-- 收发模通知单(DOC_COLLECTMOULD) -->
+<mapper namespace="com.jialong.jlmanager.dao.Iterface.CollectionDaoIF">
     <!-- 结果映射 -->
     <resultMap id="docCollectmouldMap" type="DocCollectmouldEntity"></resultMap>
     
     <!-- 表所有字段 -->
     <sql id="allColumns">
         PK_GUID, DOC_ID, UPDATETIME, ISDELETE, ADDUSER, 
-        REMARK, STATUS, FINISHTIME, FREIGHTTYPE, WOODENCASE, 
-        WOODENCASENUM, PALLET, PALLETNUM, LIFTINGRING, LIFTINGRINGNUM, 
+        REMARK, STATUS, FINISHTIME, FREIGHTTYPE,
+        WOODENCASENUM, PALLETNUM, LIFTINGRINGNUM,
         CARNUM, DRIVERPHONE, PICURL, ETCHBORD, SEPARATE, 
-        CREATETIME, BATCH
+        CREATETIME, BATCH, CLIENTCOMPANY
     </sql>
     
     <!-- 根据条件查询数据 -->
@@ -53,11 +53,8 @@
             #{status},
             #{finishtime},
             #{freighttype},
-            #{woodencase},
             #{woodencasenum},
-            #{pallet},
             #{palletnum},
-            #{liftingring},
             #{liftingringnum},
             #{carnum},
             #{driverphone},
@@ -65,7 +62,8 @@
             #{etchbord},
             #{separate},
             now(),
-            #{batch}
+            #{batch},
+            #{clientcompany}
         )
     </insert>
     
@@ -80,11 +78,8 @@
             STATUS = #{status},
             FINISHTIME = #{finishtime},
             FREIGHTTYPE = #{freighttype},
-            WOODENCASE = #{woodencase},
             WOODENCASENUM = #{woodencasenum},
-            PALLET = #{pallet},
             PALLETNUM = #{palletnum},
-            LIFTINGRING = #{liftingring},
             LIFTINGRINGNUM = #{liftingringnum},
             CARNUM = #{carnum},
             DRIVERPHONE = #{driverphone},
@@ -93,6 +88,7 @@
             SEPARATE = #{separate},
             CREATETIME = #{createtime},
             BATCH = #{batch}
+            CLIENTCOMPANY = #{clientcompany}
         WHERE PK_GUID = #{pkGuid}
     </update>
     

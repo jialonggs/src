@@ -40,6 +40,7 @@ public class CollectPartinfoEntity implements java.io.Serializable {
     @Column(name = "UPDATETIME", nullable = true, length = 19)
     private String updatetime;
 
+
     /** 是否删除 */
     @Column(name = "ISDELETE", nullable = true, length = 10)
     private Integer isdelete;
@@ -49,7 +50,7 @@ public class CollectPartinfoEntity implements java.io.Serializable {
     private String adduser;
 
     /**  */
-    @Column(name = "REMARK", nullable = true, length = 19)
+    @Column(name = "REMARK", nullable = true, length = 255)
     private String remark;
 
     /** 模具状态 */
@@ -60,13 +61,12 @@ public class CollectPartinfoEntity implements java.io.Serializable {
     @Column(name = "MOULDNAME", nullable = true, length = 255)
     private String mouldname;
 
-    /** 拆分人 */
-    @Column(name = "SPIT_ID", nullable = true, length = 255)
-    private String spitId;
+    @Column(name = "MOULD_NUMBER", nullable = true, length = 10)
+    private Integer mouldnumber;
 
-    /** 拆分时间 */
-    @Column(name = "SPITTIME", nullable = true, length = 19)
-    private String spittime;
+    /** 更新时间 */
+    @Column(name = "CREATETIME", nullable = true, length = 19)
+    private String createtime;
 
     /** 收发模通知单 */
     @Column(name = "COLLECTMOULD_ID", nullable = true, length = 255)
@@ -81,269 +81,128 @@ public class CollectPartinfoEntity implements java.io.Serializable {
     private String picurl;
 
     /** 是否被选中 */
-    @Column(name = "SELECT", nullable = true, length = 10)
-    private Integer select;
+    @Column(name = "IS_SELECT", nullable = true, length = 10)
+    private Integer isselect;
 
-    /**
-     * 获取
-     * 
-     * @return 
-     */
-    public String getPkGuid() {
-        return this.pkGuid;
+
+
+    public  CollectPartinfoEntity () {
+
     }
 
-    /**
-     * 设置
-     * 
-     * @param pkGuid
-     */
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getPkGuid() {
+        return pkGuid;
+    }
+
     public void setPkGuid(String pkGuid) {
         this.pkGuid = pkGuid;
     }
 
-    /**
-     * 获取操作员ID
-     * 
-     * @return 操作员ID
-     */
     public String getOrderId() {
-        return this.orderId;
+        return orderId;
     }
 
-    /**
-     * 设置操作员ID
-     * 
-     * @param orderId
-     *          操作员ID
-     */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
-    /**
-     * 获取更新时间
-     * 
-     * @return 更新时间
-     */
     public String getUpdatetime() {
-        return this.updatetime;
+        return updatetime;
     }
 
-    /**
-     * 设置更新时间
-     * 
-     * @param updatetime
-     *          更新时间
-     */
     public void setUpdatetime(String updatetime) {
         this.updatetime = updatetime;
     }
 
-    /**
-     * 获取是否删除
-     * 
-     * @return 是否删除
-     */
     public Integer getIsdelete() {
-        return this.isdelete;
+        return isdelete;
     }
 
-    /**
-     * 设置是否删除
-     * 
-     * @param isdelete
-     *          是否删除
-     */
     public void setIsdelete(Integer isdelete) {
         this.isdelete = isdelete;
     }
 
-    /**
-     * 获取添加/修改人
-     * 
-     * @return 添加/修改人
-     */
     public String getAdduser() {
-        return this.adduser;
+        return adduser;
     }
 
-    /**
-     * 设置添加/修改人
-     * 
-     * @param adduser
-     *          添加/修改人
-     */
     public void setAdduser(String adduser) {
         this.adduser = adduser;
     }
 
-    /**
-     * 获取
-     * 
-     * @return 
-     */
     public String getRemark() {
-        return this.remark;
+        return remark;
     }
 
-    /**
-     * 设置
-     * 
-     * @param remark
-     */
     public void setRemark(String remark) {
         this.remark = remark;
     }
 
-    /**
-     * 获取模具状态
-     * 
-     * @return 模具状态
-     */
     public Integer getStatus() {
-        return this.status;
+        return status;
     }
 
-    /**
-     * 设置模具状态
-     * 
-     * @param status
-     *          模具状态
-     */
     public void setStatus(Integer status) {
         this.status = status;
     }
 
-    /**
-     * 获取模具名称
-     * 
-     * @return 模具名称
-     */
     public String getMouldname() {
-        return this.mouldname;
+        return mouldname;
     }
 
-    /**
-     * 设置模具名称
-     * 
-     * @param mouldname
-     *          模具名称
-     */
     public void setMouldname(String mouldname) {
         this.mouldname = mouldname;
     }
 
-    /**
-     * 获取拆分人
-     * 
-     * @return 拆分人
-     */
-    public String getSpitId() {
-        return this.spitId;
+    public Integer getMouldnumber() {
+        return mouldnumber;
     }
 
-    /**
-     * 设置拆分人
-     * 
-     * @param spitId
-     *          拆分人
-     */
-    public void setSpitId(String spitId) {
-        this.spitId = spitId;
+    public void setMouldnumber(Integer mouldnumber) {
+        this.mouldnumber = mouldnumber;
     }
 
-    /**
-     * 获取拆分时间
-     * 
-     * @return 拆分时间
-     */
-    public String getSpittime() {
-        return this.spittime;
+    public String getCreatetime() {
+        return createtime;
     }
 
-    /**
-     * 设置拆分时间
-     * 
-     * @param spittime
-     *          拆分时间
-     */
-    public void setSpittime(String spittime) {
-        this.spittime = spittime;
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
     }
 
-    /**
-     * 获取收发模通知单
-     * 
-     * @return 收发模通知单
-     */
     public String getCollectmouldId() {
-        return this.collectmouldId;
+        return collectmouldId;
     }
 
-    /**
-     * 设置收发模通知单
-     * 
-     * @param collectmouldId
-     *          收发模通知单
-     */
     public void setCollectmouldId(String collectmouldId) {
         this.collectmouldId = collectmouldId;
     }
 
-    /**
-     * 获取发模通知单
-     * 
-     * @return 发模通知单
-     */
     public String getSendmouldId() {
-        return this.sendmouldId;
+        return sendmouldId;
     }
 
-    /**
-     * 设置发模通知单
-     * 
-     * @param sendmouldId
-     *          发模通知单
-     */
     public void setSendmouldId(String sendmouldId) {
         this.sendmouldId = sendmouldId;
     }
 
-    /**
-     * 获取
-     * 
-     * @return 
-     */
     public String getPicurl() {
-        return this.picurl;
+        return picurl;
     }
 
-    /**
-     * 设置
-     * 
-     * @param picurl
-     */
     public void setPicurl(String picurl) {
         this.picurl = picurl;
     }
 
-    /**
-     * 获取是否被选中
-     * 
-     * @return 是否被选中
-     */
-    public Integer getSelect() {
-        return this.select;
+    public Integer getIsselect() {
+        return isselect;
     }
 
-    /**
-     * 设置是否被选中
-     * 
-     * @param select
-     *          是否被选中
-     */
-    public void setSelect(Integer select) {
-        this.select = select;
+    public void setIsselect(Integer isselect) {
+        this.isselect = isselect;
     }
 }
