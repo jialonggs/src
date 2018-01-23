@@ -8,8 +8,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.web.bind.annotation.RequestMapping;
 @SpringBootApplication
+@ServletComponentScan("com.jialong.jlmanager.filterUtil")
 @MapperScan("com.jialong.jlmanager.dao.Iterface")
 public class JlmanagerApplication implements EmbeddedServletContainerCustomizer{
 

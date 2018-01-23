@@ -82,7 +82,7 @@ public class CollectionController {
      * @param requestBean
      * @return
      */
-    @RequestMapping(value = "/api/collection/list", method = RequestMethod.POST )
+    @RequestMapping(value = "/collection/list", method = RequestMethod.POST )
     @ResponseBody
     public ResponseDataEntity  getCollectionList(@RequestBody RequestBean requestBean) {
         ResponseDataEntity responseDataEntity = new ResponseDataEntity();
