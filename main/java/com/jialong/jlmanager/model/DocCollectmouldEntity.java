@@ -62,7 +62,7 @@ public class DocCollectmouldEntity implements java.io.Serializable {
 
     /** 寄货方式 */
     @Column(name = "FREIGHTTYPE", nullable = true, length = 10)
-    private Integer freighttype;
+    private String freighttype;
 
 //    /** 是否有木箱 */
 //    @Column(name = "WOODENCASE", nullable = true, length = 10)
@@ -87,6 +87,9 @@ public class DocCollectmouldEntity implements java.io.Serializable {
     /** 吊环数量 */
     @Column(name = "LIFTINGRINGNUM", nullable = true, length = 10)
     private Integer liftingringnum;
+
+    @Column(name = "JIANBAO", nullable = true, length = 10)
+    private boolean jianbao;
 
     /** 车牌号 */
     @Column(name = "CARNUM", nullable = true, length = 255)
@@ -125,29 +128,7 @@ public class DocCollectmouldEntity implements java.io.Serializable {
 
     }
 
-    public DocCollectmouldEntity(String pkGuid, String docId, String updatetime, Integer isdelete, String adduser, String remark, Integer status, String finishtime, Integer freighttype, Integer woodencasenum, Integer palletnum, Integer liftingringnum, String carnum, String driverphone, String picurl, Integer etchbord, Integer separate, String createtime, String batch, String receivetime, String clientcompany) {
-        this.pkGuid = pkGuid;
-        this.docId = docId;
-        this.updatetime = updatetime;
-        this.isdelete = isdelete;
-        this.adduser = adduser;
-        this.remark = remark;
-        this.status = status;
-        this.finishtime = finishtime;
-        this.freighttype = freighttype;
-        this.woodencasenum = woodencasenum;
-        this.palletnum = palletnum;
-        this.liftingringnum = liftingringnum;
-        this.carnum = carnum;
-        this.driverphone = driverphone;
-        this.picurl = picurl;
-        this.etchbord = etchbord;
-        this.separate = separate;
-        this.createtime = createtime;
-        this.batch = batch;
-        this.receivetime = receivetime;
-        this.clientcompany = clientcompany;
-    }
+
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -217,11 +198,11 @@ public class DocCollectmouldEntity implements java.io.Serializable {
         this.finishtime = finishtime;
     }
 
-    public Integer getFreighttype() {
+    public String getFreighttype() {
         return freighttype;
     }
 
-    public void setFreighttype(Integer freighttype) {
+    public void setFreighttype(String freighttype) {
         this.freighttype = freighttype;
     }
 
@@ -319,5 +300,13 @@ public class DocCollectmouldEntity implements java.io.Serializable {
 
     public void setClientcompany(String clientcompany) {
         this.clientcompany = clientcompany;
+    }
+
+    public boolean isJianbao() {
+        return jianbao;
+    }
+
+    public void setJianbao(boolean jianbao) {
+        this.jianbao = jianbao;
     }
 }

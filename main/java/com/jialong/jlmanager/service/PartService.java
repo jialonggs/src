@@ -11,6 +11,7 @@ import java.util.List;
 public class PartService implements PartServiceIF {
     @Autowired
     private PartInfoDaoIF partDao;
+
     @Override
     public void insertPart(List<CollectPartinfoEntity> collectPartinfoEntities) {
 
@@ -19,5 +20,22 @@ public class PartService implements PartServiceIF {
     @Override
     public List<CollectPartinfoEntity> getParts(CollectPartinfoEntity partinfoEntity) {
         return partDao.getModule(partinfoEntity);
+    }
+
+    @Override
+    public void addMouldPartInfo(CollectPartinfoEntity collectPartinfoEntity) {
+        partDao.insertCollectPart(collectPartinfoEntity);
+    }
+
+    @Override
+    public CollectPartinfoEntity getByPkGuid(String pkGuid) {
+        CollectPartinfoEntity collectPartinfoEntity= new CollectPartinfoEntity();
+        collectPartinfoEntity.setPkGuid(pkGuid);
+        return partDao.getModule(collectPartinfoEntity).get(0);
+    }
+
+    @Override
+    public void updateCollectPart(CollectPartinfoEntity collectPartinfoEntity) {
+        partDao.updateCollectPart(collectPartinfoEntity);
     }
 }

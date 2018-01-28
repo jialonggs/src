@@ -5,6 +5,6 @@ import com.jialong.jlmanager.model.DocCollectmouldEntity;
 import java.util.List;
 
 public interface CollectionDaoIF {
-    public void insertCollection(DocCollectmouldEntity collectmouldEntity);
+    public void insertDocCollectmould(DocCollectmouldEntity collectmouldEntity);
     public List<DocCollectmouldEntity> getCollection(DocCollectmouldEntity collectmouldEntity);
 }

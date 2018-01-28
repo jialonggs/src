@@ -20,7 +20,7 @@ public class CollectionService implements CollectionServiceIF {
     public void insertCollection(DocCollectmouldEntity collectmouldEntity, List<CollectPartinfoEntity> parts) {
         String id= UUID.randomUUID().toString();
         collectmouldEntity.setPkGuid(id);
-        collectionDao.insertCollection(collectmouldEntity);
+        collectionDao.insertDocCollectmould(collectmouldEntity);
         for(int i=0;i<parts.size();i++){
             parts.get(i).setCollectmouldId(id);
             partDao.insertCollectPart(parts.get(i));
@@ -33,9 +33,15 @@ public class CollectionService implements CollectionServiceIF {
         return collectionDao.getCollection(collectmouldEntity);
     }
 
+    @Override
     public DocCollectmouldEntity getCollectionDetail(String pkguid){
         DocCollectmouldEntity collectmouldEntity = new DocCollectmouldEntity();
         collectmouldEntity.setPkGuid(pkguid);
         return collectionDao.getCollection(collectmouldEntity).get(0);
+    }
+
+    @Override
+    public void addNewCollection(DocCollectmouldEntity docCollectmouldEntity) {
+        collectionDao.insertDocCollectmould(docCollectmouldEntity);
     }
 }

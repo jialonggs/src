@@ -24,51 +24,51 @@ import java.util.*;
 
 @Controller
 public class ProjectController {
-    @Autowired
-    ProjectServiceIF projectService;
-
-
-    //收模上传
-
-    @RequestMapping(value = "/api/project/list", method = { RequestMethod.POST, RequestMethod.GET })
-    @ResponseBody
-    public String getProjectList(@RequestBody RequestBean requestBean) {
-
-        JSONObject resultDataObject=new JSONObject();
-        ProjectEntity projectEntity=new ProjectEntity();
-        projectEntity.setAdduser(requestBean.getUserId());
-        projectEntity.setPkGuid(JSONObject.parseObject(requestBean.getData()).getString("pkGuid"));
-
-        List<ProjectEntity> projectEntityList=projectService.getProjectList(projectEntity);
-
-        resultDataObject.put("projectList",JSONArray.toJSONString(projectEntityList));
-        ResultBean resultBean=new ResultBean();
-        resultBean.setSuccess(1);
-        resultBean.setData(resultDataObject.toJSONString());
-        return JSONObject.toJSONString(resultBean);
-    }
-
-    @RequestMapping(value = "/api/project/insert", method = { RequestMethod.POST, RequestMethod.GET })
-    @ResponseBody
-    public String insertProjectList(@RequestBody RequestBean requestBean) {
-        ProjectEntity projectEntity=JSONObject.parseObject(requestBean.getData(),ProjectEntity.class);
-        projectService.createProject(projectEntity);
-        ResultBean resultBean=new ResultBean();
-        resultBean.setSuccess(1);
-        resultBean.setData("");
-        return JSONObject.toJSONString(resultBean);
-    }
-
-    @RequestMapping(value = "/api/project/detail", method = { RequestMethod.POST, RequestMethod.GET })
-    @ResponseBody
-    public String getProjectDetail(@RequestBody RequestBean requestBean) {
-        ProjectEntity projectEntity=new ProjectEntity();
-        projectEntity.setPkGuid(JSONObject.parseObject(requestBean.getData()).getString("pkGuid"));
-        String result=JSONObject.toJSONString(projectService.getProjectDetail(projectEntity));
-        ResultBean resultBean=new ResultBean();
-        resultBean.setSuccess(1);
-        resultBean.setData(result);
-        return JSONObject.toJSONString(resultBean);
-    }
+//    @Autowired
+//    ProjectServiceIF projectService;
+//
+//
+//    //收模上传
+//
+//    @RequestMapping(value = "/api/project/list", method = { RequestMethod.POST, RequestMethod.GET })
+//    @ResponseBody
+//    public String getProjectList(@RequestBody RequestBean requestBean) {
+//
+//        JSONObject resultDataObject=new JSONObject();
+//        ProjectEntity projectEntity=new ProjectEntity();
+//        projectEntity.setAdduser(requestBean.getUserId());
+//        projectEntity.setPkGuid(JSONObject.parseObject(requestBean.getData()).getString("pkGuid"));
+//
+//        List<ProjectEntity> projectEntityList=projectService.getProjectList(projectEntity);
+//
+//        resultDataObject.put("projectList",JSONArray.toJSONString(projectEntityList));
+//        ResultBean resultBean=new ResultBean();
+//        resultBean.setSuccess(1);
+//        resultBean.setData(resultDataObject.toJSONString());
+//        return JSONObject.toJSONString(resultBean);
+//    }
+//
+//    @RequestMapping(value = "/api/project/insert", method = { RequestMethod.POST, RequestMethod.GET })
+//    @ResponseBody
+//    public String insertProjectList(@RequestBody RequestBean requestBean) {
+//        ProjectEntity projectEntity=JSONObject.parseObject(requestBean.getData(),ProjectEntity.class);
+//        projectService.createProject(projectEntity);
+//        ResultBean resultBean=new ResultBean();
+//        resultBean.setSuccess(1);
+//        resultBean.setData("");
+//        return JSONObject.toJSONString(resultBean);
+//    }
+//
+//    @RequestMapping(value = "/api/project/detail", method = { RequestMethod.POST, RequestMethod.GET })
+//    @ResponseBody
+//    public String getProjectDetail(@RequestBody RequestBean requestBean) {
+//        ProjectEntity projectEntity=new ProjectEntity();
+//        projectEntity.setPkGuid(JSONObject.parseObject(requestBean.getData()).getString("pkGuid"));
+//        String result=JSONObject.toJSONString(projectService.getProjectDetail(projectEntity));
+//        ResultBean resultBean=new ResultBean();
+//        resultBean.setSuccess(1);
+//        resultBean.setData(result);
+//        return JSONObject.toJSONString(resultBean);
+//    }
 
 }

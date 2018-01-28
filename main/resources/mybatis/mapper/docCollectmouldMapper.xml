@@ -22,7 +22,7 @@
     <sql id="allColumns">
         PK_GUID, DOC_ID, UPDATETIME, ISDELETE, ADDUSER, 
         REMARK, STATUS, FINISHTIME, FREIGHTTYPE,
-        WOODENCASENUM, PALLETNUM, LIFTINGRINGNUM,
+        WOODENCASENUM, PALLETNUM, LIFTINGRINGNUM, JIANBAO,
         CARNUM, DRIVERPHONE, PICURL, ETCHBORD, SEPARATE, 
         CREATETIME, BATCH, CLIENTCOMPANY
     </sql>
@@ -56,6 +56,7 @@
             #{woodencasenum},
             #{palletnum},
             #{liftingringnum},
+            #{jianbao},
             #{carnum},
             #{driverphone},
             #{picurl},
@@ -81,6 +82,7 @@
             WOODENCASENUM = #{woodencasenum},
             PALLETNUM = #{palletnum},
             LIFTINGRINGNUM = #{liftingringnum},
+            JIANBAO = #{jianbao}
             CARNUM = #{carnum},
             DRIVERPHONE = #{driverphone},
             PICURL = #{picurl},

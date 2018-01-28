@@ -48,21 +48,20 @@
     <insert id="insertCollectPart" parameterType="com.jialong.jlmanager.model.CollectPartinfoEntity">
         INSERT INTO COLLECT_PARTINFO (<include refid="allColumns" />)
         VALUES (
-            uuid(),
+            #{pkGuid},
             #{orderId},
             now(),
             0,
             #{adduser},
             #{remark},
-            #{status},
+            0,
             #{mouldname},
-            #{number},
-            #{spitId},
+            #{mouldnumber},
             now(),
             #{collectmouldId},
             #{sendmouldId},
             #{picurl},
-            #{select}
+            0
         )
     </insert>
     

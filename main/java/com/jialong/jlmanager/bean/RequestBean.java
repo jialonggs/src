@@ -7,6 +7,11 @@ public class RequestBean {
     private String  MD5;
     private int Source;
 
+
+    public RequestBean () {
+
+    }
+
     public String getData() {
         return Data;
     }
@@ -14,6 +19,15 @@ public class RequestBean {
     public void setData(String data) {
         Data = data;
     }
+
+
+//    public Object getData() {
+//        return Data;
+//    }
+//
+//    public void setData(Object data) {
+//        Data = data;
+//    }
 
     public String getUserId() {
         return UserId;

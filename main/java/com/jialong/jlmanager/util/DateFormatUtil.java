@@ -35,6 +35,20 @@ public final class DateFormatUtil {
     }
 
     /**
+     * longtoString
+     * @param currentTime
+     * @param formatStr
+     * @return
+     */
+    public static String longToString(long currentTime, String formatStr) {
+        Date date = new Date(currentTime);
+        String strDate = "";
+        SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
+        strDate = sdf.format(date);
+        return strDate;
+    }
+
+    /**
      * date to string
      * @param date
      * @param formatStr

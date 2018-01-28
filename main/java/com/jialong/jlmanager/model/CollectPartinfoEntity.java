@@ -32,7 +32,7 @@ public class CollectPartinfoEntity implements java.io.Serializable {
     @Column(name = "PK_GUID", unique = true, nullable = false, length = 255)
     private String pkGuid;
 
-    /** 操作员ID */
+    /** 订单ID */
     @Column(name = "ORDER_ID", nullable = true, length = 255)
     private String orderId;
 
@@ -43,7 +43,7 @@ public class CollectPartinfoEntity implements java.io.Serializable {
 
     /** 是否删除 */
     @Column(name = "ISDELETE", nullable = true, length = 10)
-    private Integer isdelete;
+    private Boolean isdelete;
 
     /** 添加/修改人 */
     @Column(name = "ADDUSER", nullable = true, length = 255)
@@ -64,9 +64,10 @@ public class CollectPartinfoEntity implements java.io.Serializable {
     @Column(name = "MOULD_NUMBER", nullable = true, length = 10)
     private Integer mouldnumber;
 
-    /** 更新时间 */
+    /** 创建时间 */
     @Column(name = "CREATETIME", nullable = true, length = 19)
     private String createtime;
+
 
     /** 收发模通知单 */
     @Column(name = "COLLECTMOULD_ID", nullable = true, length = 255)
@@ -118,11 +119,11 @@ public class CollectPartinfoEntity implements java.io.Serializable {
         this.updatetime = updatetime;
     }
 
-    public Integer getIsdelete() {
+    public Boolean getIsdelete() {
         return isdelete;
     }
 
-    public void setIsdelete(Integer isdelete) {
+    public void setIsdelete(Boolean isdelete) {
         this.isdelete = isdelete;
     }
 
