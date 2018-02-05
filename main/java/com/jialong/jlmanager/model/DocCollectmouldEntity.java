@@ -118,8 +118,7 @@ public class DocCollectmouldEntity implements java.io.Serializable {
     /** 批次 */
     @Column(name = "BATCH", nullable = true, length = 255)
     private String batch;
-    @Column(name = "RECIVETIME", nullable = true, length = 255)
-    private String receivetime;
+
     /** 客户单位 */
     @Column(name = "CLIENTCOMPANY", nullable = true, length = 255)
     private String clientcompany;
@@ -127,8 +126,6 @@ public class DocCollectmouldEntity implements java.io.Serializable {
     public DocCollectmouldEntity () {
 
     }
-
-
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -230,6 +227,14 @@ public class DocCollectmouldEntity implements java.io.Serializable {
         this.liftingringnum = liftingringnum;
     }
 
+    public boolean isJianbao() {
+        return jianbao;
+    }
+
+    public void setJianbao(boolean jianbao) {
+        this.jianbao = jianbao;
+    }
+
     public String getCarnum() {
         return carnum;
     }
@@ -286,13 +291,6 @@ public class DocCollectmouldEntity implements java.io.Serializable {
         this.batch = batch;
     }
 
-    public String getReceivetime() {
-        return receivetime;
-    }
-
-    public void setReceivetime(String receivetime) {
-        this.receivetime = receivetime;
-    }
 
     public String getClientcompany() {
         return clientcompany;
@@ -300,13 +298,5 @@ public class DocCollectmouldEntity implements java.io.Serializable {
 
     public void setClientcompany(String clientcompany) {
         this.clientcompany = clientcompany;
-    }
-
-    public boolean isJianbao() {
-        return jianbao;
-    }
-
-    public void setJianbao(boolean jianbao) {
-        this.jianbao = jianbao;
     }
 }

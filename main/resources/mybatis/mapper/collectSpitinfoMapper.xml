@@ -14,7 +14,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- 收模拆分订单列表(COLLECT_SPITINFO) -->
-<mapper namespace="mysql.collectSpitinfo">
+<mapper namespace="com.jialong.jlmanager.dao.Iterface.SplitCollectionDaoIF">
     <!-- 结果映射 -->
     <resultMap id="collectSpitinfoMap" type="CollectSpitinfoEntity"></resultMap>
     
@@ -22,7 +22,7 @@
     <sql id="allColumns">
         PK_GUID, ORDER_ID, UPDATETIME, ISDELETE, ADDUSER, 
         REMARK, MOULDNAME, SPIT_ID, SPITTIME, COLLECTMOULD_ID, 
-        CREATETIME
+        SIWENNUM, WUSIWENNUM, MOULDNUM, CREATETIME
     </sql>
     
     <!-- 根据条件查询数据 -->
@@ -39,34 +39,40 @@
     </select>
     
     <!-- 插入数据 -->
-    <insert id="insertCollectSpitinfo" parameterType="map">
+    <insert id="insertCollectSpitinfo" parameterType="com.jialong.jlmanager.model.CollectSpitinfoEntity">
         INSERT INTO COLLECT_SPITINFO (<include refid="allColumns" />)
         VALUES (
             #{pkGuid},
             #{orderId},
-            #{updatetime},
-            #{isdelete},
+            now(),
+            0,
             #{adduser},
             #{remark},
             #{mouldname},
             #{spitId},
             #{spittime},
             #{collectmouldId},
-            #{createtime}
+            #{siwennum},
+            #{wusiwennum},
+            #{mouldnum},
+            now()
         )
     </insert>
     
     <!-- 修改数据 -->
-    <update id="updateCollectSpitinfo" parameterType="map">
+    <update id="updateCollectSpitinfo" parameterType="com.jialong.jlmanager.model.CollectSpitinfoEntity">
         UPDATE COLLECT_SPITINFO SET
             ORDER_ID = #{orderId},
-            UPDATETIME = #{updatetime},
+            UPDATETIME = now(),
             ISDELETE = #{isdelete},
             ADDUSER = #{adduser},
             REMARK = #{remark},
             MOULDNAME = #{mouldname},
             SPIT_ID = #{spitId},
             SPITTIME = #{spittime},
+            SIWENNUM = #{siwennum},
+            WUSIWENNUM = #{wusiwennum},
+            MOULDNUM = #{mouldnum},
             COLLECTMOULD_ID = #{collectmouldId},
             CREATETIME = #{createtime}
         WHERE PK_GUID = #{pkGuid}

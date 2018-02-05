@@ -1,7 +1,9 @@
 package com.jialong.jlmanager.controller.CommController;
 
+import com.jialong.jlmanager.bean.RequestBean;
 import com.jialong.jlmanager.model.ResponseDataEntity;
 import com.jialong.jlmanager.util.ImageUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
@@ -9,6 +11,13 @@ import java.util.*;
 @RestController
 @RequestMapping("/comm")
 public class CommControllers {
+
+    @Value("${img.location}")
+    private String location;
+
+    @Value("${imgurl.url}")
+    public  String imgurl;
+
 
     /**
      *
@@ -30,12 +39,11 @@ public class CommControllers {
         for (MultipartFile file : multipartFiles){
             // 获取文件类型
             String fileTyle= file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-            String path = "D:/image/test/"; //地址需要调整
             String fileUrl = ""; //文件的绝对路径
             try {
                 // 存储文件
-                System.out.print("测试");
-                fileUrl = ImageUtil.saveImg(file,path,userId,imgPakage,fileTyle);
+//                String path = "src/main/resources/static/img/";
+                fileUrl = ImageUtil.saveImg(file,location,userId,imgPakage,fileTyle,imgurl);
                 fileUrls.add(fileUrl);
             } catch (Exception e) {
                 responseDataEntity.setCode(2);
@@ -49,4 +57,30 @@ public class CommControllers {
 
     }
 
+
+
+    /**
+     * 删除图片
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/delfile/delImage", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseDataEntity delImage(@RequestBody RequestBean requestBean) {
+        ResponseDataEntity responseDataEntity = new ResponseDataEntity();
+        String url = requestBean.getData();
+        if(null == url || url == "") {
+            responseDataEntity.setCode(3);
+            responseDataEntity.setMsg("图片地址为空");
+            return responseDataEntity;
+        }
+        Boolean delFlag = ImageUtil.delImage(imgurl,url,location);
+        if(delFlag){
+            responseDataEntity.setCode(0);
+        }else {
+            responseDataEntity.setCode(2);
+            responseDataEntity.setMsg("图片删除失败");
+        }
+        return  responseDataEntity;
+    }
 }

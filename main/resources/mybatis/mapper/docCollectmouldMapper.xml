@@ -50,7 +50,7 @@
             0,
             #{adduser},
             #{remark},
-            #{status},
+            0,
             #{finishtime},
             #{freighttype},
             #{woodencasenum},
@@ -62,14 +62,14 @@
             #{picurl},
             #{etchbord},
             #{separate},
-            now(),
+            #{createtime},
             #{batch},
             #{clientcompany}
         )
     </insert>
     
     <!-- 修改数据 -->
-    <update id="updateDocCollectmould" parameterType="map">
+    <update id="upadteCollection" parameterType="map">
         UPDATE DOC_COLLECTMOULD SET
             DOC_ID = #{docId},
             UPDATETIME = #{updatetime},
@@ -82,14 +82,14 @@
             WOODENCASENUM = #{woodencasenum},
             PALLETNUM = #{palletnum},
             LIFTINGRINGNUM = #{liftingringnum},
-            JIANBAO = #{jianbao}
+            JIANBAO = #{jianbao},
             CARNUM = #{carnum},
             DRIVERPHONE = #{driverphone},
             PICURL = #{picurl},
             ETCHBORD = #{etchbord},
             SEPARATE = #{separate},
             CREATETIME = #{createtime},
-            BATCH = #{batch}
+            BATCH = #{batch},
             CLIENTCOMPANY = #{clientcompany}
         WHERE PK_GUID = #{pkGuid}
     </update>

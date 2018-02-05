@@ -2,15 +2,13 @@ package com.jialong.jlmanager.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jialong.jlmanager.bean.RequestBean;
-import com.jialong.jlmanager.model.CollectPartinfoEntity;
-import com.jialong.jlmanager.model.DocCollectmouldEntity;
-import com.jialong.jlmanager.model.ResponseDataEntity;
+import com.jialong.jlmanager.model.*;
 import com.jialong.jlmanager.model.responseModel.CollectmouldListResp;
 import com.jialong.jlmanager.model.responseModel.PkGuidIdResp;
 import com.jialong.jlmanager.service.impl.CollectionServiceIF;
 import com.jialong.jlmanager.service.impl.PartServiceIF;
 import com.jialong.jlmanager.util.DateFormatUtil;
-import com.jialong.jlmanager.util.SplitUrlUtil;
+import com.jialong.jlmanager.util.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
@@ -35,7 +33,15 @@ public class CollectionController {
         ResponseDataEntity responseDataEntity = new ResponseDataEntity();
         DocCollectmouldEntity collect = new DocCollectmouldEntity();
         collect.setAdduser(requestBean.getUserId());
-        List<DocCollectmouldEntity> collectmouldEntities = collectionService.getCollection(collect);
+        // 进行分页查询
+        PageInfoEntity pageInfoEntity = JSONObject.parseObject(requestBean.getPageInfo(),PageInfoEntity.class);
+        PageBean<DocCollectmouldEntity> pageData = collectionService.getCollection(collect,pageInfoEntity);
+        if(null == pageData) {
+            responseDataEntity.setCode(2);
+            responseDataEntity.setMsg("查询出错");
+            return responseDataEntity;
+        }
+        List<DocCollectmouldEntity> collectmouldEntities = pageData.getItems();
         if(collectmouldEntities != null && collectmouldEntities.size() > 0 ) { //非空
             List<CollectmouldListResp> respsList = new ArrayList<CollectmouldListResp>();
             for(DocCollectmouldEntity docCollectmouldEntity : collectmouldEntities){
@@ -57,6 +63,9 @@ public class CollectionController {
                 respsList.add(resp);
             }
             responseDataEntity.setCode(0);
+            //设置分页信息
+            pageInfoEntity.setTotalnum(pageData.getPageInfo().getTotal());
+            responseDataEntity.setPageInfoEntity(pageInfoEntity);
             responseDataEntity.setData(respsList);
         } else {
             responseDataEntity.setCode(3);
@@ -77,6 +86,9 @@ public class CollectionController {
         try {
             DocCollectmouldEntity docCollectmouldEntity =  JSONObject.parseObject(requestBean.getData(),DocCollectmouldEntity.class);
             docCollectmouldEntity.setAdduser(requestBean.getUserId());
+            long time = Long.parseLong(docCollectmouldEntity.getCreatetime());
+            String receiveTime = DateFormatUtil.longToString(time, DateFormatUtil.YYYY_MM_DD_HH_MM);
+            docCollectmouldEntity.setCreatetime(receiveTime);
             // 生成主键
             String uuid = UUID.randomUUID().toString();
             docCollectmouldEntity.setPkGuid(uuid);
@@ -89,12 +101,32 @@ public class CollectionController {
             responseDataEntity.setData(resp);
             return  responseDataEntity;
         } catch (Exception e) {
+            e.printStackTrace();
             responseDataEntity.setCode(2);
             responseDataEntity.setMsg("添加失败");
             return  responseDataEntity;
         }
+    }
 
-
+    /**
+     * 更新基础数据
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/update/collection", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseDataEntity updateCollectionInfo(@RequestBody RequestBean requestBean) {
+        ResponseDataEntity responseDataEntity = new ResponseDataEntity();
+        DocCollectmouldEntity docCollectmouldEntity =  JSONObject.parseObject(requestBean.getData(),DocCollectmouldEntity.class);
+        try {
+            collectionService.updateCollection(docCollectmouldEntity);
+            responseDataEntity.setCode(0);
+        }catch (Exception e) {
+            e.printStackTrace();
+            responseDataEntity.setCode(2);
+            responseDataEntity.setMsg("修改失败");
+        }
+        return  responseDataEntity;
     }
 
     /**
@@ -127,6 +159,27 @@ public class CollectionController {
     }
 
     /**
+     * 更新模具具体信息
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value="/update/mouldinfo", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseDataEntity updatePartInfo(@RequestBody RequestBean requestBean) {
+        ResponseDataEntity responseDataEntity = new ResponseDataEntity();
+        CollectPartinfoEntity collectPartinfoEntity =  JSONObject.parseObject(requestBean.getData(),CollectPartinfoEntity.class);
+        try {
+            partService.updateCollectPart(collectPartinfoEntity);
+            responseDataEntity.setCode(0);
+        }catch (Exception e) {
+            e.printStackTrace();
+            responseDataEntity.setCode(2);
+            responseDataEntity.setMsg("更改失败");
+        }
+        return  responseDataEntity;
+    }
+
+    /**
      * 获取所有模具信息
      * @param requestBean
      * @return
@@ -144,12 +197,12 @@ public class CollectionController {
         collectPartinfoEntity.setCollectmouldId(colletionId);
         List<CollectPartinfoEntity> list = partService.getParts(collectPartinfoEntity);
         if(null != list && list.size() > 0){
-            for(CollectPartinfoEntity item : list) {
-                String picUrl = item.getPicurl();
-                // 获取第一个图片
-                String url = SplitUrlUtil.getFirstUrl(picUrl,"\\|");
-                item.setPicurl(url);
-            }
+//            for(CollectPartinfoEntity item : list) {
+//                String picUrl = item.getPicurl();
+//                // 获取第一个图片
+//                String[] url = SplitUrlUtil.getAllUrl(picUrl,"\\|");
+//                item.setPicurl(url.toString());
+//            }
             responseDataEntity.setCode(0);
             responseDataEntity.setData(list);
             return responseDataEntity;
@@ -215,27 +268,115 @@ public class CollectionController {
 
     }
 
-//    @RequestMapping(value = "/api/collection/detail", method = { RequestMethod.POST, RequestMethod.GET })
-//    @ResponseBody
-//    public String getCollectionDetail(@RequestBody RequestBean requestBean) {
-//
-//
-//        JSONObject jsonObject=JSONObject.parseObject(requestBean.getData());
-//        String pkguid=jsonObject.getString("pkGuid");
-//        CollectPartinfoEntity partinfoEntity=new CollectPartinfoEntity();
-//        partinfoEntity.setCollectmouldId(pkguid);
-//        List<CollectPartinfoEntity> collectPartinfoEntities=partService.getParts(partinfoEntity);
-//
-//        DocCollectmouldEntity collectmouldEntity=collectionService.getCollectionDetail(pkguid);
-//        JSONObject collectResultObject= (JSONObject) JSONObject.toJSON(collectmouldEntity);
-//        String parts=JSONArray.toJSONString(collectPartinfoEntities);
-//        collectResultObject.put("modulesList",parts);
-//        ResultBean resultBean=new ResultBean();
-//        resultBean.setSuccess(1);
-//        resultBean.setData(collectResultObject.toJSONString());
-//        return JSONObject.toJSONString(resultBean);
-//    }
 
+    /**
+     * 添加拆模记录
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/collection/split", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseDataEntity addCaiMoInfo(@RequestBody RequestBean requestBean) {
+        ResponseDataEntity responseDataEntity = new ResponseDataEntity();
+        CollectSpitinfoEntity collectSpitinfoEntity = JSONObject.parseObject(requestBean.getData(), CollectSpitinfoEntity.class);
+        String uuId = UUID.randomUUID().toString();
+        collectSpitinfoEntity.setPkGuid(uuId);
+        String userId = requestBean.getUserId();
+        collectSpitinfoEntity.setAdduser(userId);
+        try {
+            long time = Long.parseLong(collectSpitinfoEntity.getSpittime());
+            String splitTime = DateFormatUtil.longToString(time, DateFormatUtil.YYYY_MM_DD_HH_MM);
+            collectSpitinfoEntity.setSpittime(splitTime);
+            collectionService.addCollectionSplitInfo(collectSpitinfoEntity);
+            responseDataEntity.setCode(0);
+            responseDataEntity.setData(uuId);
+            return responseDataEntity;
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseDataEntity.setCode(2);
+            responseDataEntity.setMsg("添加失败");
+            return responseDataEntity;
+        }
+
+    }
+
+    /**
+     * 获取拆模集合
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/collection/getsplitlist", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseDataEntity getAllSplitList (@RequestBody RequestBean requestBean) {
+        ResponseDataEntity responseDataEntity = new ResponseDataEntity();
+        CollectSpitinfoEntity collect = new CollectSpitinfoEntity();
+        collect.setAdduser(requestBean.getUserId());
+        PageInfoEntity pageInfoEntity = JSONObject.parseObject(requestBean.getPageInfo(),PageInfoEntity.class);
+        PageBean<CollectSpitinfoEntity> pageData = collectionService.getCollectSplitList(collect,pageInfoEntity);
+        if(null == pageData) {
+            responseDataEntity.setCode(2);
+            responseDataEntity.setMsg("查询出错");
+            return responseDataEntity;
+        }
+        List<CollectSpitinfoEntity> collectSpites = pageData.getItems();
+        if(collectSpites != null && collectSpites.size() > 0 ) { //非空
+            pageInfoEntity.setTotalnum(pageData.getPageInfo().getTotal());
+            responseDataEntity.setPageInfoEntity(pageInfoEntity);
+            responseDataEntity.setCode(0);
+            responseDataEntity.setData(collectSpites);
+            responseDataEntity.setPageInfoEntity(pageInfoEntity);
+        } else {
+            responseDataEntity.setCode(3);
+            responseDataEntity.setMsg("数据查询为空");
+        }
+        return responseDataEntity;
+    }
+
+
+    /**
+     * 查看详情
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/collection/getsplitinfos", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseDataEntity getSplitInfos(@RequestBody RequestBean requestBean) {
+        ResponseDataEntity responseDataEntity = new ResponseDataEntity();
+        String pkGuid = requestBean.getData();
+        CollectSpitinfoEntity collectSpitinfoEntity = new CollectSpitinfoEntity();
+        collectSpitinfoEntity.setPkGuid(pkGuid);
+        collectSpitinfoEntity = collectionService.getCollectSplitInfo(collectSpitinfoEntity);
+        if( null != collectSpitinfoEntity){
+            responseDataEntity.setCode(0);
+            responseDataEntity.setData(collectSpitinfoEntity);
+        } else {
+            responseDataEntity.setCode(2);
+            responseDataEntity.setMsg("查询是失败");
+        }
+        return  responseDataEntity;
+    }
+
+    /**
+     * 更新拆模记录
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/collection/updtesplitinfos", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseDataEntity toUpdateSplitInfo(@RequestBody RequestBean requestBean) {
+        ResponseDataEntity responseDataEntity = new ResponseDataEntity();
+        CollectSpitinfoEntity collectSpitinfoEntity = JSONObject.parseObject(requestBean.getData(),CollectSpitinfoEntity.class);
+        try {
+            collectionService.updateCollectSplitInfo(collectSpitinfoEntity);
+            responseDataEntity.setCode(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseDataEntity.setCode(2);
+            responseDataEntity.setMsg("添加失败");
+
+        }
+        return responseDataEntity;
+    }
 
 
 }

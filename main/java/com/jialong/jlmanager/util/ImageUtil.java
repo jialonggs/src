@@ -1,5 +1,6 @@
 package com.jialong.jlmanager.util;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.util.Date;
@@ -7,14 +8,20 @@ import java.util.Random;
 import java.util.UUID;
 
 public class ImageUtil {
+
+
     /**
-     * 保存文件，直接以multipartFile形式
+     * 保存图片
      * @param multipartFile
-     * @param path 文件保存绝对路径
-     * @return 返回文件名
+     * @param path
+     * @param userId
+     * @param imgPakage
+     * @param imgType
+     * @param imgurl
+     * @return
      * @throws IOException
      */
-    public static String saveImg(MultipartFile multipartFile, String path,String userId ,String imgPakage,String imgType) throws IOException {
+    public static String saveImg(MultipartFile multipartFile, String path,String userId ,String imgPakage,String imgType,String imgurl) throws IOException {
         // 路径 基本路径+用户ID+图片类型
         path = path+imgPakage+"/"+userId+"/";
         File file = new File(path);
@@ -37,8 +44,33 @@ public class ImageUtil {
         bos.close();
         String url = "";
         // 图片的绝对路径
-        url = path + fileName;
+        String newPath = imgPakage +"/"+userId+"/";
+        url = imgurl+newPath + fileName;
         return url;
     }
 
+    /**
+     * 删除图片
+     * @param imgurl
+     * @param url
+     * @return
+     */
+    public static Boolean delImage(String imgurl,String url,String location){
+        Boolean flag = false;
+        try {
+
+            String strs = url.substring(imgurl.length(),url.length());
+            String allURL = location + strs;
+            File imageFile = new File(allURL);
+            if(imageFile.exists() && imageFile.isFile()) {
+              if(imageFile.delete()) {
+                  flag  = true;
+              }
+            }
+            return flag;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  flag;
+        }
+    }
 }

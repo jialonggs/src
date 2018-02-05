@@ -6,6 +6,8 @@ public class RequestBean {
     private String UserToken;
     private String  MD5;
     private int Source;
+    private String PageInfo;
+
 
 
     public RequestBean () {
@@ -21,13 +23,13 @@ public class RequestBean {
     }
 
 
-//    public Object getData() {
-//        return Data;
-//    }
-//
-//    public void setData(Object data) {
-//        Data = data;
-//    }
+    public String getPageInfo() {
+        return PageInfo;
+    }
+
+    public void setPageInfo(String pageInfo) {
+        PageInfo = pageInfo;
+    }
 
     public String getUserId() {
         return UserId;
